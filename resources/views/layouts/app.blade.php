@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="es" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarOpen: true }"
-    :class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarOpen: true }" :class="{ 'dark': darkMode }">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,24 +9,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
-
-    @auth
-        @include('layouts.navigation')
-    @endauth
-
-    <main class="p-6">
-        @yield('content')
-    </main>
-
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] antialiased transition-colors duration-300">
-
+<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] antialiased transition-colors duration-300">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <aside x-show="sidebarOpen"
@@ -34,15 +21,16 @@
                 Boilerplate
             </div>
             <nav class="flex-1 p-4 space-y-2">
-                <a href="/" class="block px-4 py-2 rounded-lg bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white">
+                <a href="{{ route('dashboard') }}"
+                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Inicio
                 </a>
                 <a href="#"
                     class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]">
                     Proyectos
                 </a>
-                <a href="#"
-                    class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]">
+                <a href="{{ route('profile.edit') }}"
+                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Configuración
                 </a>
             </nav>
@@ -62,8 +50,20 @@
 
                 <div class="flex items-center gap-6">
                     <div class="flex flex-col items-end">
-                        <span class="text-sm font-semibold dark:text-white">Usuario Invitado</span>
-                        <span class="text-xs text-[#A1A09A]">Modo Demo</span>
+                        @auth
+                            <span class="text-sm font-semibold dark:text-white">{{ Auth::user()->name }}</span>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="text-xs text-red-500 hover:underline">Cerrar Sesión</button>
+                            </form>
+                        @else
+                            <span class="text-sm font-semibold dark:text-white">Invitado</span>
+                            <div class="flex gap-2">
+                                <a href="{{ route('login') }}" class="text-xs text-indigo-500 hover:underline">Login</a>
+                                <a href="{{ route('register') }}"
+                                    class="text-xs text-indigo-500 hover:underline">Registro</a>
+                            </div>
+                        @endauth
                     </div>
 
                     <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
@@ -75,9 +75,18 @@
 
             <!-- Content Area -->
             <main class="flex-1 overflow-y-auto p-8 bg-[#FDFDFC] dark:bg-[#0a0a0a]">
+                @if (isset($header))
+                    <div class="mb-8">
+                        <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight">
+                            {{ $header }}
+                        </h2>
+                    </div>
+                @endif
+                {{ $slot ?? '' }}
                 @yield('content')
             </main>
         </div>
     </div>
 </body>
+
 </html>

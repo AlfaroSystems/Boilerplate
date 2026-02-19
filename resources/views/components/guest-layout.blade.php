@@ -21,12 +21,6 @@
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
         {{ $slot }}
     </div>
-
-    <!-- Toggle Dark Mode Floating -->
-    <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
-        class="fixed bottom-8 right-8 p-3 bg-white dark:bg-[#161615] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-full shadow-lg transition-transform hover:scale-110 dark:text-white">
-        <span x-text="darkMode ? '☀️' : '🌙'"></span>
-    </button>
 </body>
 
 </html>
