@@ -25,13 +25,13 @@
                     class="block px-4 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Inicio
                 </a>
-                <a href="#"
-                    class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]">
-                    Proyectos
+                <a href="{{ route('users.index') }}"
+                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                    Usuarios
                 </a>
-                <a href="{{ route('profile.edit') }}"
-                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
-                    Configuración
+                <a href="{{ route('roles.index') }}"
+                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('roles.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                    Roles y Permisos
                 </a>
             </nav>
         </aside>

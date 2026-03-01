@@ -14,15 +14,12 @@
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
 
-                <!-- Email Address -->
                 <x-input name="email" type="email" label="Correo Electrónico" :value="old('email')" required autofocus
-                    autocomplete="username" placeholder="ejemplo@correo.com" />
+                    autocomplete="username" placeholder="ejemplo@gmail.com" />
 
-                <!-- Password -->
                 <x-input name="password" type="password" label="Contraseña" required autocomplete="current-password"
-                    placeholder="Tu contraseña segura" />
+                    placeholder="Contraseña" />
 
-                <!-- Remember Me & Forgot Password -->
                 <div class="flex flex-wrap items-center justify-between gap-4 mt-2">
                     <label for="remember_me" class="inline-flex items-center group cursor-pointer">
                         <input id="remember_me" type="checkbox"
@@ -47,13 +44,6 @@
                     </x-primary-button>
                 </div>
 
-                <div class="flex items-center justify-center pt-4 border-t border-gray-100 dark:border-[#3E3E3A]">
-                    <span class="text-sm text-gray-600 dark:text-[#A1A09A]">
-                        ¿No tienes cuenta?
-                        <a class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline ml-1 transition-all"
-                            href="{{ route('register') }}">Regístrate gratis</a>
-                    </span>
-                </div>
             </form>
         </div>
     </div>

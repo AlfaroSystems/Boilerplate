@@ -6,7 +6,6 @@
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
 
-        <!-- Password -->
         <x-input name="password" type="password" label="Contraseña" required autocomplete="current-password" />
 
         <div class="flex justify-end mt-4">
