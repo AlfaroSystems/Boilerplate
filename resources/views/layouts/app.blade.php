@@ -16,8 +16,9 @@
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <aside x-show="sidebarOpen"
-            class="w-64 bg-white dark:bg-[#161615] border-r border-[#e3e3e0] dark:border-[#3E3E3A] flex flex-col shrink-0 transition-all">
-            <div class="p-6 font-bold text-xl border-b border-[#e3e3e0] dark:border-[#3E3E3A] dark:text-white">
+            class="w-64 bg-white dark:bg-[#161615] border-r border-[#e3e3e0] dark:border-[#3E3E3A] flex flex-col shrink-0 transition-all z-20">
+            <div
+                class="h-16 flex items-center px-6 font-bold text-xl border-b border-[#e3e3e0] dark:border-[#3E3E3A] dark:text-white uppercase tracking-wider">
                 Boilerplate
             </div>
             <nav class="flex-1 p-4 space-y-2">
@@ -25,50 +26,63 @@
                     class="block px-4 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Inicio
                 </a>
-                <a href="{{ route('users.index') }}"
-                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
-                    Usuarios
-                </a>
-                <a href="{{ route('roles.index') }}"
-                    class="block px-4 py-2 rounded-lg {{ request()->routeIs('roles.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
-                    Roles y Permisos
-                </a>
+                @can('gestionar-usuarios')
+                    <a href="{{ route('users.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Usuarios
+                    </a>
+                @endcan
+                @can('gestionar-roles')
+                    <a href="{{ route('roles.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('roles.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Roles y Permisos
+                    </a>
+                @endcan
             </nav>
         </aside>
 
         <div class="flex-1 flex flex-col relative overflow-hidden">
-            <!-- Header/Navbar -->
             <header
-                class="h-16 bg-white dark:bg-[#161615] border-b border-[#e3e3e0] dark:border-[#3E3E3A] flex items-center justify-between px-8 shrink-0">
+                class="h-16 bg-white/80 dark:bg-[#161615]/80 backdrop-blur-md border-b border-[#e3e3e0] dark:border-[#3E3E3A] flex items-center justify-between px-6 shrink-0 z-10 sticky top-0">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#3E3E3A] transition-colors dark:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#3E3E3A] transition-all dark:text-white group">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                            d="M4 6h16M4 12h16m-16 6h16">
+                        </path>
                     </svg>
                 </button>
 
-                <div class="flex items-center gap-6">
-                    <div class="flex flex-col items-end">
-                        @auth
-                            <span class="text-sm font-semibold dark:text-white">{{ Auth::user()->name }}</span>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="text-xs text-red-500 hover:underline">Cerrar Sesión</button>
-                            </form>
-                        @else
-                            <span class="text-sm font-semibold dark:text-white">Invitado</span>
-                            <div class="flex gap-2">
-                                <a href="{{ route('login') }}" class="text-xs text-indigo-500 hover:underline">Login</a>
-                                <a href="{{ route('register') }}"
-                                    class="text-xs text-indigo-500 hover:underline">Registro</a>
-                            </div>
-                        @endauth
+                <div class="flex items-center gap-4">
+                    <!-- User Info Section -->
+                    <div class="flex items-center gap-3 pr-4 border-r border-[#e3e3e0] dark:border-[#3E3E3A]">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold text-gray-900 dark:text-white leading-none">
+                                {{ Auth::user()->name }}
+                            </p>
+                            @auth
+                                <form method="POST" action="{{ route('logout') }}" class="mt-1">
+                                    @csrf
+                                    <button type="submit"
+                                        class="text-[10px] uppercase tracking-tighter font-bold text-red-500 hover:text-red-600 transition-colors">
+                                        Cerrar Sesión
+                                    </button>
+                                </form>
+                            @endauth
+                        </div>
+                        <!-- Profile Circle/Avatar Placeholder -->
+                        <div
+                            class="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 dark:bg-indigo-900/20 dark:border-indigo-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xs">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
                     </div>
 
+                    <!-- Dark Mode Toggle -->
                     <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
-                        class="p-2 bg-[#dbdbd7] dark:bg-[#3E3E3A] rounded-full w-10 h-10 flex items-center justify-center transition-transform hover:scale-105">
-                        <span x-text="darkMode ? '☀️' : '🌙'"></span>
+                        class="p-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl transition-all hover:bg-white dark:hover:bg-[#252524] hover:shadow-sm">
+                        <span x-show="!darkMode" class="text-lg">🌙</span>
+                        <span x-show="darkMode" class="text-lg">☀️</span>
                     </button>
                 </div>
             </header>

@@ -33,12 +33,11 @@
                             Usuario</label>
                         <select name="role" id="role"
                             class="w-full rounded-lg bg-gray-50 border border-[#e3e3e0] dark:bg-[#161615] dark:border-[#3E3E3A] dark:text-white p-2 text-sm">
-                            <option value="Usuario" {{ old('role', $user->role) == 'Usuario' ? 'selected' : '' }}>Usuario
-                                General</option>
-                            <option value="Admin" {{ old('role', $user->role) == 'Admin' ? 'selected' : '' }}>
-                                Administrador</option>
-                            <option value="Editor" {{ old('role', $user->role) == 'Editor' ? 'selected' : '' }}>Editor
-                            </option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role', $user->roles->first()?->name) == $role->name ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
 

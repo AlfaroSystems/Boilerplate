@@ -5,11 +5,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index(): View
     {
+        Gate::authorize('gestionar-usuarios');
         $users = User::all();
         return view('users.index', compact('users'));
     }
@@ -21,18 +24,21 @@ class UserController extends Controller
 
     public function create(): View
     {
-        return view('users.create');
+        Gate::authorize('gestionar-usuarios');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('gestionar-usuarios');
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string'],
+            'role' => ['required', 'string', 'exists:roles,name'],
             'status' => ['required', 'string'],
         ]);
 
@@ -42,7 +48,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => $request->role, // Mantenemos el campo por ahora pero sincronizamos
             'status' => $request->status,
         ]);
 
@@ -53,17 +59,20 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        return view('users.edit', compact('user'));
+        Gate::authorize('gestionar-usuarios');
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
     {
+        Gate::authorize('gestionar-usuarios');
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'phone' => ['nullable', 'string', 'max:20'],
-            'role' => ['required', 'string'],
+            'role' => ['required', 'string', 'exists:roles,name'],
             'status' => ['required', 'string'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
@@ -78,7 +87,7 @@ class UserController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+            $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
@@ -89,6 +98,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        Gate::authorize('eliminar-cuenta');
         $user->update(['status' => 'inactive']);
 
         return redirect()->route('users.index')->with('status', 'Usuario desactivado con éxito');

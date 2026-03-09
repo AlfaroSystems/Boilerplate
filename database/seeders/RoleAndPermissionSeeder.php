@@ -19,13 +19,14 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'editar-perfil']);
         Permission::firstOrCreate(['name' => 'eliminar-cuenta']);
         Permission::firstOrCreate(['name' => 'gestionar-usuarios']);
+        Permission::firstOrCreate(['name' => 'gestionar-roles']);
 
         // Crear Roles y asignar permisos
-        $roleAdmin = Role::create(['name' => 'Admin']);
-        $roleAdmin->givePermissionTo(Permission::all());
+        $roleAdmin = Role::firstOrCreate(['name' => 'Admin']);
+        $roleAdmin->syncPermissions(Permission::all());
 
-        $roleUser = Role::create(['name' => 'Usuario']);
-        $roleUser->givePermissionTo(['editar-perfil', 'eliminar-cuenta']);
+        $roleUser = Role::firstOrCreate(['name' => 'Usuario']);
+        $roleUser->syncPermissions(['editar-perfil', 'eliminar-cuenta']);
 
         // Asignar rol al usuario de prueba si existe
         $user = User::where('email', 'test@example.com')->first();
