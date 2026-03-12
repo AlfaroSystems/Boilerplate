@@ -34,6 +34,12 @@
                     class="block px-4 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Inicio
                 </a>
+                @can('editar-perfil')
+                    <a href="{{ route('profile.edit') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Mi Perfil
+                    </a>
+                @endcan
                 @can('gestionar-usuarios')
                     <a href="{{ route('users.index') }}"
                         class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
