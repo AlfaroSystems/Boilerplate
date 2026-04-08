@@ -22,59 +22,84 @@
 
 <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] antialiased transition-colors duration-300">
     <div class="flex h-screen overflow-hidden">
+
         <!-- Sidebar -->
         <aside x-show="sidebarOpen"
             class="w-64 bg-white dark:bg-[#161615] border-r border-[#e3e3e0] dark:border-[#3E3E3A] flex flex-col shrink-0 transition-all z-20">
+
             <div
                 class="h-16 flex items-center px-6 font-bold text-xl border-b border-[#e3e3e0] dark:border-[#3E3E3A] dark:text-white uppercase tracking-wider">
                 Boilerplate
             </div>
+
             <nav class="flex-1 p-4 space-y-2">
+
+                <!-- Inicio -->
                 <a href="{{ route('dashboard') }}"
                     class="block px-4 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                     Inicio
                 </a>
+
+                <!-- Perfil -->
                 @can('editar-perfil')
                     <a href="{{ route('profile.edit') }}"
                         class="block px-4 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Mi Perfil
                     </a>
                 @endcan
+
+                <!-- Usuarios -->
                 @can('gestionar-usuarios')
                     <a href="{{ route('users.index') }}"
-                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('users.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Usuarios
                     </a>
                 @endcan
+
+                <!-- Roles -->
                 @can('gestionar-roles')
                     <a href="{{ route('roles.index') }}"
-                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('roles.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('roles.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Roles y Permisos
                     </a>
                 @endcan
+
+                <!-- 🔥 NUEVO: Habitaciones -->
+                @can('gestionar-habitaciones')
+                    <a href="{{ route('rooms.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('rooms.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Gestión de Habitaciones
+                    </a>
+                @endcan
+
             </nav>
         </aside>
 
+        <!-- CONTENIDO -->
         <div class="flex-1 flex flex-col relative overflow-hidden">
+
+            <!-- HEADER -->
             <header
                 class="h-16 bg-white/80 dark:bg-[#161615]/80 backdrop-blur-md border-b border-[#e3e3e0] dark:border-[#3E3E3A] flex items-center justify-between px-6 shrink-0 z-10 sticky top-0">
+
                 <button @click="sidebarOpen = !sidebarOpen"
                     class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#3E3E3A] transition-all dark:text-white group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-16 6h16">
-                        </path>
+                            d="M4 6h16M4 12h16m-16 6h16"></path>
                     </svg>
                 </button>
 
                 <div class="flex items-center gap-4">
-                    <!-- User Info Section -->
+
+                    <!-- Usuario -->
                     <div class="flex items-center gap-3 pr-4 border-r border-[#e3e3e0] dark:border-[#3E3E3A]">
                         <div class="text-right hidden sm:block">
                             <p class="text-sm font-bold text-gray-900 dark:text-white leading-none">
                                 {{ Auth::user()->name }}
                             </p>
+
                             @auth
                                 <form method="POST" action="{{ route('logout') }}" class="mt-1">
                                     @csrf
@@ -85,14 +110,14 @@
                                 </form>
                             @endauth
                         </div>
-                        <!-- Profile Circle/Avatar Placeholder -->
+
                         <div
                             class="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 dark:bg-indigo-900/20 dark:border-indigo-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xs">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                     </div>
 
-                    <!-- Dark Mode Toggle -->
+                    <!-- Dark mode -->
                     <button @click="darkMode = !darkMode; localStorage.setItem('darkMode', darkMode)"
                         class="p-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl transition-all hover:bg-white dark:hover:bg-[#252524] hover:shadow-sm">
                         <span x-show="!darkMode" class="text-lg">🌙</span>
@@ -101,8 +126,9 @@
                 </div>
             </header>
 
-            <!-- Content Area -->
+            <!-- MAIN -->
             <main class="flex-1 overflow-y-auto p-8 bg-[#FDFDFC] dark:bg-[#0a0a0a]">
+
                 @if (isset($header))
                     <div class="mb-8">
                         <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight">
@@ -110,8 +136,10 @@
                         </h2>
                     </div>
                 @endif
+
                 {{ $slot ?? '' }}
                 @yield('content')
+
             </main>
         </div>
     </div>
