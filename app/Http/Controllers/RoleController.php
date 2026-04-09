@@ -32,8 +32,12 @@ class RoleController extends Controller
             'permissions' => 'required|array'
         ]);
 
-        $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions(array_map('intval', $request->permissions));
+        try {
+            $role = Role::create(['name' => $request->name]);
+            $role->syncPermissions(array_map('intval', $request->permissions));
+        } catch (\Spatie\Permission\Exceptions\RoleAlreadyExists $e) {
+            return back()->withErrors(['name' => 'El rol ya existe.'])->withInput();
+        }
 
         return redirect()->route('roles.index')->with('status', 'Rol creado con éxito');
     }
