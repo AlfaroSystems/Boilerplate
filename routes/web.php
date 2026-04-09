@@ -30,6 +30,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles', RoleController::class);
     // Gestión de clientes
     Route::resource('clientes', \App\Http\Controllers\ClienteController::class);
+
+    // Gestión de habitaciones
+    Route::resource('rooms', RoomController::class);
 });
 
 require __DIR__ . '/auth.php';

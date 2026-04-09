@@ -20,6 +20,8 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'eliminar-cuenta']);
         Permission::firstOrCreate(['name' => 'gestionar-usuarios']);
         Permission::firstOrCreate(['name' => 'gestionar-roles']);
+        Permission::firstOrCreate(['name' => 'gestionar-clientes']);
+        Permission::firstOrCreate(['name' => 'gestionar-habitaciones']);
 
         // Crear Roles y asignar permisos
         $roleAdmin = Role::firstOrCreate(['name' => 'Admin']);
