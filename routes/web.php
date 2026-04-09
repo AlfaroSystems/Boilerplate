@@ -26,16 +26,10 @@ Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
 
     // Gestión de usuarios
-    Route::resource('users', \App\Http\Controllers\UserController::class)
-        ->middleware('can:gestionar-usuarios');
-
-    // Gestión de roles
-    Route::resource('roles', RoleController::class)
-        ->middleware('can:gestionar-roles');
-
-    // Gestión de habitaciones
-    Route::resource('rooms', RoomController::class)
-        ->middleware('can:gestionar-habitaciones');
+    Route::resource('users', \App\Http\Controllers\UserController::class);
+    Route::resource('roles', RoleController::class);
+    // Gestión de clientes
+    Route::resource('clientes', \App\Http\Controllers\ClienteController::class);
 });
 
 require __DIR__ . '/auth.php';
