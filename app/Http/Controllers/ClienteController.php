@@ -35,4 +35,30 @@ class ClienteController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Cliente registrado originosamente.');
     }
+
+    // EDITAR (mostrar formulario)
+    public function edit($id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        return view('clientes.edit', compact('cliente'));
+    }
+
+    // ACTUALIZAR
+    public function update(Request $request, $id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        $cliente->update($request->all());
+
+        return redirect()->route('clientes.index');
+    }
+
+    // ELIMINAR
+    public function destroy($id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        $cliente->delete();
+
+        return redirect()->route('clientes.index');
+    }
+
 }
