@@ -1,92 +1,119 @@
 <x-app-layout>
     <x-slot name="header">
-        <span class="text-gray-900 dark:text-white font-bold">Editar Cliente</span>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('clientes.index') }}" class="p-1.5 hover:bg-gray-100 dark:hover:bg-[#3E3E3A] rounded-lg transition-colors text-gray-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </a>
+            <span>Editar Cliente: {{ $cliente->nombre }} {{ $cliente->apellido }}</span>
+        </div>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto mt-6 bg-white dark:bg-[#161615] p-6 rounded-xl shadow">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <x-card>
+            <x-slot name="header">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Actualizar Información</h3>
+                        <p class="text-xs text-gray-500 dark:text-[#A1A09A]">Modifique los campos necesarios para actualizar el registro del cliente.</p>
+                    </div>
+                </div>
+            </x-slot>
 
-        <form action="{{ route('clientes.update', $cliente->id) }}" method="POST" class="space-y-6">
-            @csrf
-            @method('PUT')
+            <form action="{{ route('clientes.update', $cliente) }}" method="POST" class="p-6 space-y-6">
+                @csrf
+                @method('PUT')
 
-            <!-- Nombre y Apellido -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="text-sm font-bold text-gray-700 dark:text-white">Nombre</label>
-                    <input type="text" name="nombre" value="{{ $cliente->nombre }}"
-                        class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                        border border-gray-300 dark:border-[#3E3E3A] 
-                        rounded-xl text-gray-900 dark:text-white outline-none">
+                <!-- Nombre y Apellido -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="nombre" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $cliente->nombre) }}" required
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('nombre') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="apellido" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Apellido</label>
+                        <input type="text" name="apellido" id="apellido" value="{{ old('apellido', $cliente->apellido) }}" required
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('apellido') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
-                <div>
-                    <label class="text-sm font-bold text-gray-700 dark:text-white">Apellido</label>
-                    <input type="text" name="apellido" value="{{ $cliente->apellido }}"
-                        class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                        border border-gray-300 dark:border-[#3E3E3A] 
-                        rounded-xl text-gray-900 dark:text-white outline-none">
+                <div class="h-px bg-[#e3e3e0] dark:bg-[#3E3E3A] my-2"></div>
+
+                <!-- Ubicación Geográfica -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Departamento -->
+                    <div class="space-y-2">
+                        <label for="departamento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Departamento</label>
+                        <select name="departamento" id="departamento" required onchange="cargarMunicipios()"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
+                            <option value="">Seleccione Departamento</option>
+                        </select>
+                        @error('departamento') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Municipio -->
+                    <div class="space-y-2">
+                        <label for="municipio" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Municipio</label>
+                        <select name="municipio" id="municipio" required onchange="cargarDistritos()"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
+                            <option value="">Seleccione Municipio</option>
+                        </select>
+                        @error('municipio') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <!-- Distrito -->
+                    <div class="space-y-2">
+                        <label for="distrito" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Distrito</label>
+                        <select name="distrito" id="distrito" required
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
+                            <option value="">Seleccione Distrito</option>
+                        </select>
+                        @error('distrito') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
                 </div>
-            </div>
 
-            <!-- Línea -->
-            <div class="h-px bg-gray-200 dark:bg-[#3E3E3A]"></div>
-
-            <!-- Ubicación -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="text-sm font-bold text-gray-700 dark:text-white">Departamento</label>
-                    <select name="departamento" id="departamento" onchange="cargarMunicipios()"
-                        class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                        border border-gray-300 dark:border-[#3E3E3A] 
-                        rounded-xl text-gray-900 dark:text-white">
-                        <option value="">Seleccione</option>
-                    </select>
+                <!-- Tipo de Asentamiento -->
+                <div class="space-y-2 max-w-md">
+                    <label for="tipo_asentamiento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Tipo de Asentamiento</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
+                            <input type="radio" name="tipo_asentamiento" value="canton" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" {{ old('tipo_asentamiento', $cliente->tipo_asentamiento) == 'canton' ? 'checked' : '' }}>
+                            <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Cantón</span>
+                        </label>
+                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
+                            <input type="radio" name="tipo_asentamiento" value="colonia" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" {{ old('tipo_asentamiento', $cliente->tipo_asentamiento) == 'colonia' ? 'checked' : '' }}>
+                            <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Colonia</span>
+                        </label>
+                    </div>
+                    @error('tipo_asentamiento') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
-                <div>
-                    <label class="text-sm font-bold text-gray-700 dark:text-white">Municipio</label>
-                    <select name="municipio" id="municipio" onchange="cargarDistritos()"
-                        class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                        border border-gray-300 dark:border-[#3E3E3A] 
-                        rounded-xl text-gray-900 dark:text-white">
-                        <option value="">Seleccione</option>
-                    </select>
+                <div class="pt-6 flex gap-4">
+                    <button type="submit"
+                        class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0 text-sm uppercase tracking-wider">
+                        Actualizar Cliente
+                    </button>
+                    <a href="{{ route('clientes.index') }}"
+                        class="px-8 py-3 bg-gray-100 dark:bg-[#3E3E3A] text-gray-700 dark:text-[#EDEDEC] font-bold rounded-xl transition-all hover:bg-gray-200 dark:hover:bg-[#4E4E4A] text-sm uppercase tracking-wider">
+                        Cancelar
+                    </a>
                 </div>
-
-                <div>
-                    <label class="text-sm font-bold text-gray-700 dark:text-white">Distrito</label>
-                    <select name="distrito" id="distrito"
-                        class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                        border border-gray-300 dark:border-[#3E3E3A] 
-                        rounded-xl text-gray-900 dark:text-white">
-                        <option value="">Seleccione</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Tipo -->
-            <div>
-                <label class="text-sm font-bold text-gray-700 dark:text-white">Tipo de Asentamiento</label>
-                <select name="tipo_asentamiento"
-                    class="w-full px-4 py-2 bg-gray-50 dark:bg-[#1C1C1B] 
-                    border border-gray-300 dark:border-[#3E3E3A] 
-                    rounded-xl text-gray-900 dark:text-white">
-                    <option value="canton" {{ $cliente->tipo_asentamiento == 'canton' ? 'selected' : '' }}>Cantón</option>
-                    <option value="colonia" {{ $cliente->tipo_asentamiento == 'colonia' ? 'selected' : '' }}>Colonia</option>
-                </select>
-            </div>
-
-            <!-- Botón -->
-            <div class="pt-4">
-                <button class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow">
-                    Actualizar Cliente
-                </button>
-            </div>
-
-        </form>
+            </form>
+        </x-card>
     </div>
 
     <script>
+        // Nueva División Política Administrativa El Salvador 2024 (Mismo objeto que create.blade.php)
         const lugaresES = {
             "Ahuachapán": {
                 "Ahuachapán Norte": ["Atiquizaya", "El Refugio", "San Lorenzo", "Turín"],
@@ -161,54 +188,57 @@
                 "La Unión Sur": ["La Unión", "Conchagua", "El Carmen", "Intipucá", "Meanguera del Golfo", "San Alejo", "Yayantique", "Yucuaiquín"]
             }
         };
-        const clienteDepto = "{{ $cliente->departamento }}";
-        const clienteMuni = "{{ $cliente->municipio }}";
-        const clienteDist = "{{ $cliente->distrito }}";
 
         const depSelect = document.getElementById('departamento');
         const munSelect = document.getElementById('municipio');
         const distSelect = document.getElementById('distrito');
 
-        // Cargar departamentos
+        // Valores iniciales (datos del cliente)
+        const initialDepto = "{{ old('departamento', $cliente->departamento) }}";
+        const initialMuni = "{{ old('municipio', $cliente->municipio) }}";
+        const initialDist = "{{ old('distrito', $cliente->distrito) }}";
+
+        // Inicializar Departamentos
         Object.keys(lugaresES).forEach(depto => {
-            let selected = depto === clienteDepto ? 'selected' : '';
-            depSelect.innerHTML += `<option value="${depto}" ${selected}>${depto}</option>`;
+            const option = new Option(depto, depto);
+            if (depto === initialDepto) option.selected = true;
+            depSelect.add(option);
         });
 
-        function cargarMunicipios() {
-            munSelect.innerHTML = '<option value="">Seleccione</option>';
-            distSelect.innerHTML = '<option value="">Seleccione</option>';
+        // Cargar Municipios inicialmente si hay un departamento seleccionado
+        if (initialDepto) {
+            cargarMunicipios(initialMuni);
+        }
 
+        // Cargar Distritos inicialmente si hay un municipio seleccionado
+        if (initialMuni) {
+            cargarDistritos(initialDist);
+        }
+
+        function cargarMunicipios(selectedMuni = null) {
+            munSelect.length = 1;
+            distSelect.length = 1;
             const depto = depSelect.value;
-
-            if (depto && lugaresES[depto]) {
+            if (depto) {
                 Object.keys(lugaresES[depto]).forEach(muni => {
-                    let selected = muni === clienteMuni ? 'selected' : '';
-                    munSelect.innerHTML += `<option value="${muni}" ${selected}>${muni}</option>`;
+                    const option = new Option(muni, muni);
+                    if (muni === selectedMuni) option.selected = true;
+                    munSelect.add(option);
                 });
             }
         }
 
-        function cargarDistritos() {
-            distSelect.innerHTML = '<option value="">Seleccione</option>';
-
+        function cargarDistritos(selectedDist = null) {
+            distSelect.length = 1;
             const depto = depSelect.value;
             const muni = munSelect.value;
-
-            if (depto && muni && lugaresES[depto][muni]) {
+            if (depto && muni) {
                 lugaresES[depto][muni].forEach(dist => {
-                    let selected = dist === clienteDist ? 'selected' : '';
-                    distSelect.innerHTML += `<option value="${dist}" ${selected}>${dist}</option>`;
+                    const option = new Option(dist, dist);
+                    if (dist === selectedDist) option.selected = true;
+                    distSelect.add(option);
                 });
             }
         }
-
-        // AUTO CARGA
-        window.onload = () => {
-            cargarMunicipios();
-            setTimeout(() => {
-                cargarDistritos();
-            }, 100);
-        };
     </script>
 </x-app-layout>
