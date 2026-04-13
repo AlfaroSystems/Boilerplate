@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RoomController;
+use App\Models\Room;
+use App\Models\Cliente;
 use Illuminate\Support\Facades\Route;
 
 // Redirige a la raíz al login
@@ -11,7 +13,14 @@ Route::get('/', function () {
 
 // Dashboard
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalRooms = Room::count();
+    $availableRooms = Room::where('status', 'disponible')->count();
+    $occupiedRooms = Room::where('status', 'ocupada')->count();
+    $totalClients = Cliente::count();
+    
+    $occupancyRate = $totalRooms > 0 ? ($occupiedRooms / $totalRooms) * 100 : 0;
+
+    return view('dashboard', compact('totalRooms', 'availableRooms', 'occupiedRooms', 'totalClients', 'occupancyRate'));
 })->middleware(['auth', 'can:acceder-dashboard'])->name('dashboard');
 
 // Perfil
