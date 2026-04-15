@@ -49,6 +49,32 @@
 
                 <div class="h-px bg-[#e3e3e0] dark:bg-[#3E3E3A] my-2"></div>
 
+                <!-- Detalles de Contacto y Documento -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="dui" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">DUI</label>
+                        <input type="text" name="dui" id="dui" value="{{ old('dui', $cliente->dui) }}" required placeholder="00000000-0"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('dui') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="telefono" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Teléfono</label>
+                        <input type="text" name="telefono" id="telefono" value="{{ old('telefono', $cliente->telefono) }}" required placeholder="XXXX-XXXX"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('telefono') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <label for="correo_electronico" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Correo Electrónico</label>
+                        <input type="email" name="correo_electronico" id="correo_electronico" value="{{ old('correo_electronico', $cliente->correo_electronico) }}" placeholder="ejemplo@correo.com"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('correo_electronico') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="h-px bg-[#e3e3e0] dark:bg-[#3E3E3A] my-2"></div>
+
                 <!-- Ubicación Geográfica -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Departamento -->
@@ -80,6 +106,14 @@
                         </select>
                         @error('distrito') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
+                </div>
+
+                <!-- Dirección Completa -->
+                <div class="space-y-2">
+                    <label for="direccion_completa" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Dirección Completa (Colonia, Avenida, Casa)</label>
+                    <textarea name="direccion_completa" id="direccion_completa" rows="2" required
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white resize-none">{{ old('direccion_completa', $cliente->direccion_completa) }}</textarea>
+                    @error('direccion_completa') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Tipo de Asentamiento -->

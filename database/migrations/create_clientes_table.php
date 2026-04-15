@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('municipio');
             $table->string('distrito');
             $table->enum('tipo_asentamiento', ['canton', 'colonia']);
+            $table->string('direccion_completa')->nullable();
+            $table->string('telefono')->nullable();
+            $table->string('correo_electronico')->nullable();
+            $table->string('dui')->nullable();
             $table->timestamps();
         });
     }

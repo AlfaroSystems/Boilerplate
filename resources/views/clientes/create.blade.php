@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-2">
-            <a href="{{ route('clientes.index') }}" class="p-1.5 hover:bg-gray-100 dark:hover:bg-[#3E3E3A] rounded-lg transition-colors text-gray-500">
+            <a href="{{ route('clientes.index') }}"
+                class="p-1.5 hover:bg-gray-100 dark:hover:bg-[#3E3E3A] rounded-lg transition-colors text-gray-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -14,14 +15,17 @@
         <x-card>
             <x-slot name="header">
                 <div class="flex items-center gap-3">
-                    <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+                    <div
+                        class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Información del Cliente</h3>
-                        <p class="text-xs text-gray-500 dark:text-[#A1A09A]">Complete todos los campos para registrar al cliente en el sistema.</p>
+                        <p class="text-xs text-gray-500 dark:text-[#A1A09A]">Complete todos los campos para registrar al
+                            cliente en el sistema.</p>
                     </div>
                 </div>
             </x-slot>
@@ -39,10 +43,42 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label for="apellido" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Apellido</label>
+                        <label for="apellido"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Apellido</label>
                         <input type="text" name="apellido" id="apellido" value="{{ old('apellido') }}" required
                             class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
                         @error('apellido') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="h-px bg-[#e3e3e0] dark:bg-[#3E3E3A] my-2"></div>
+
+                <!-- Detalles de Contacto y Documento -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="dui" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">DUI</label>
+                        <input type="text" name="dui" id="dui" value="{{ old('dui') }}" required
+                            placeholder="00000000-0"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('dui') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="telefono"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Teléfono</label>
+                        <input type="text" name="telefono" id="telefono" value="{{ old('telefono') }}" required
+                            placeholder="XXXX-XXXX"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('telefono') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2 md:col-span-2">
+                        <label for="correo_electronico"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Correo Electrónico</label>
+                        <input type="email" name="correo_electronico" id="correo_electronico"
+                            value="{{ old('correo_electronico') }}" placeholder="ejemplo@correo.com"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('correo_electronico') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -52,7 +88,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Departamento -->
                     <div class="space-y-2">
-                        <label for="departamento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Departamento</label>
+                        <label for="departamento"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Departamento</label>
                         <select name="departamento" id="departamento" required onchange="cargarMunicipios()"
                             class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
                             <option value="">Seleccione Departamento</option>
@@ -62,7 +99,8 @@
 
                     <!-- Municipio -->
                     <div class="space-y-2">
-                        <label for="municipio" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Municipio</label>
+                        <label for="municipio"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Municipio</label>
                         <select name="municipio" id="municipio" required onchange="cargarDistritos()"
                             class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
                             <option value="">Seleccione Municipio</option>
@@ -72,7 +110,8 @@
 
                     <!-- Distrito -->
                     <div class="space-y-2">
-                        <label for="distrito" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Distrito</label>
+                        <label for="distrito"
+                            class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Distrito</label>
                         <select name="distrito" id="distrito" required
                             class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none dark:text-white">
                             <option value="">Seleccione Distrito</option>
@@ -81,16 +120,31 @@
                     </div>
                 </div>
 
+                <!-- Dirección Completa -->
+                <div class="space-y-2">
+                    <label for="direccion_completa"
+                        class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Dirección Completa (Colonia,
+                        Avenida, Casa)</label>
+                    <textarea name="direccion_completa" id="direccion_completa" rows="2" required
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white resize-none">{{ old('direccion_completa') }}</textarea>
+                    @error('direccion_completa') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                </div>
+
                 <!-- Tipo de Asentamiento -->
                 <div class="space-y-2 max-w-md">
-                    <label for="tipo_asentamiento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Tipo de Asentamiento</label>
+                    <label for="tipo_asentamiento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Tipo de
+                        Asentamiento</label>
                     <div class="grid grid-cols-2 gap-4">
-                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
-                            <input type="radio" name="tipo_asentamiento" value="canton" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                        <label
+                            class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
+                            <input type="radio" name="tipo_asentamiento" value="canton"
+                                class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Cantón</span>
                         </label>
-                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
-                            <input type="radio" name="tipo_asentamiento" value="colonia" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                        <label
+                            class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
+                            <input type="radio" name="tipo_asentamiento" value="colonia"
+                                class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
                             <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Colonia</span>
                         </label>
                     </div>
