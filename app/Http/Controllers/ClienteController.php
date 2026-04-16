@@ -28,6 +28,10 @@ class ClienteController extends Controller
             'municipio' => 'required|string|max:255',
             'distrito' => 'required|string|max:255',
             'tipo_asentamiento' => 'required|in:canton,colonia',
+            'direccion_completa' => 'required|string',
+            'telefono' => 'required|string|max:20',
+            'correo_electronico' => 'nullable|email|max:255',
+            'dui' => 'required|string|max:10',
         ]);
 
         // Crear registro en la BD
@@ -50,6 +54,10 @@ class ClienteController extends Controller
             'municipio' => 'required|string|max:255',
             'distrito' => 'required|string|max:255',
             'tipo_asentamiento' => 'required|in:canton,colonia',
+            'direccion_completa' => 'required|string',
+            'telefono' => 'required|string|max:20',
+            'correo_electronico' => 'nullable|email|max:255',
+            'dui' => 'required|string|max:10',
         ]);
 
         $cliente->update($request->all());
