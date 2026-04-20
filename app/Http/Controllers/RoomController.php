@@ -13,12 +13,10 @@ class RoomController extends Controller
     {
         Gate::authorize('gestionar-habitaciones');
 
-        $rooms = Room::all();
+        // Sincronizar estados de forma masiva (Alta Eficiencia)
+        Room::syncAllStatuses();
 
-        // Sincronizar estados automáticamente basado en reservas
-        foreach ($rooms as $room) {
-            $room->syncStatus();
-        }
+        $rooms = Room::all();
 
         return view('rooms.index', compact('rooms'));
     }

@@ -33,17 +33,29 @@
                 </div>
 
                 <!-- Habitación -->
-                <div>
+                <div x-data="{ selectedRoomImage: '' }">
                     <label class="block font-bold text-gray-700 dark:text-gray-300 mb-2">Habitación</label>
-                    <select name="room_id" required class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-                        <option value="">Seleccione una habitación...</option>
+                    <select name="room_id" required 
+                        x-on:change="selectedRoomImage = $event.target.selectedOptions[0].dataset.image"
+                        class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                        <option value="" data-image="">Seleccione una habitación...</option>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
+                            <option value="{{ $room->id }}" 
+                                data-image="{{ $room->image_path }}"
+                                {{ old('room_id') == $room->id ? 'selected' : '' }}>
                                 #{{ $room->room_number }} - {{ $room->type }} (${{ number_format($room->price, 2) }}/noche)
                             </option>
                         @endforeach
                     </select>
                     @error('room_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+
+                    <!-- Preview -->
+                    <template x-if="selectedRoomImage">
+                        <div class="mt-4 animate-fade-in">
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Vista previa de la habitación:</label>
+                            <img :src="'/storage/' + selectedRoomImage" class="w-full h-48 object-cover rounded-2xl border dark:border-[#3E3E3A] shadow-inner">
+                        </div>
+                    </template>
                 </div>
 
                 <!-- Fechas -->

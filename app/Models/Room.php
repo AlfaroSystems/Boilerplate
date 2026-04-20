@@ -24,20 +24,40 @@ class Room extends Model
     ];
 
     /**
-     * Sincroniza el estado de la habitación basado en las reservas actuales.
+     * Sincronización masiva de estados de todas las habitaciones (Alto Rendimiento)
+     */
+    public static function syncAllStatuses()
+    {
+        $today = now()->format('Y-m-d');
+
+        // 1. Resetear todas a disponible (excepto las que están en mantenimiento manual)
+        self::where('status', '!=', 'mantenimiento')
+            ->update(['status' => 'disponible']);
+
+        // 2. Marcar como ocupadas aquellas con reservas confirmadas para hoy
+        $occupiedRoomIds = Reservation::where('status', 'confirmada')
+            ->where('check_in', '<=', $today)
+            ->where('check_out', '>', $today)
+            ->pluck('room_id');
+
+        if ($occupiedRoomIds->isNotEmpty()) {
+            self::whereIn('id', $occupiedRoomIds)
+                ->where('status', '!=', 'mantenimiento')
+                ->update(['status' => 'ocupada']);
+        }
+    }
+
+    /**
+     * Sincroniza el estado de una habitación individual.
      */
     public function syncStatus()
     {
-        // Si está en mantenimiento, no tocamos el estado automáticamente
-        if ($this->status === 'mantenimiento') {
-            return;
-        }
+        if ($this->status === 'mantenimiento') return;
 
         $newStatus = $this->is_occupied ? 'ocupada' : 'disponible';
-
+        
         if ($this->status !== $newStatus) {
-            $this->status = $newStatus;
-            $this->save();
+            $this->update(['status' => $newStatus]);
         }
     }
 

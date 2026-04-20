@@ -13,8 +13,8 @@ Route::get('/', function () {
 
 // Dashboard
 Route::get('/dashboard', function () {
-    // Sincronizar estados automáticamente
-    Room::all()->each->syncStatus();
+    // Sincronización masiva de estados (Alta Eficiencia)
+    Room::syncAllStatuses();
 
     $totalRooms = Room::count();
     $availableRooms = Room::where('status', 'disponible')->count();

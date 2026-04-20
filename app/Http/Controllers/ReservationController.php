@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservationController extends Controller
 {
@@ -32,33 +33,45 @@ class ReservationController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Verificar disponibilidad (evitar solapamiento)
-        $overlap = Reservation::where('room_id', $request->room_id)
-            ->where('status', 'confirmada')
-            ->where(function($query) use ($request) {
-                $query->whereBetween('check_in', [$request->check_in, $request->check_out])
-                      ->orWhereBetween('check_out', [$request->check_in, $request->check_out])
-                      ->orWhere(function($q) use ($request) {
-                          $q->where('check_in', '<=', $request->check_in)
-                            ->where('check_out', '>=', $request->check_out);
-                      });
-            })->exists();
+        try {
+            return DB::transaction(function () use ($request) {
+                // Bloquear la habitación para evitar cambios concurrentes
+                $room = Room::where('id', $request->room_id)->lockForUpdate()->firstOrFail();
 
-        if ($overlap) {
-            return back()->withInput()->with('error', 'La habitación ya está reservada para esas fechas.');
+                // Nuevo algoritmo de solapamiento (Industria):
+                // (Entrada < Nueva_Salida) AND (Salida > Nueva_Entrada)
+                $overlap = Reservation::where('room_id', $request->room_id)
+                    ->whereIn('status', ['confirmada', 'completada'])
+                    ->where('check_in', '<', $request->check_out)
+                    ->where('check_out', '>', $request->check_in)
+                    ->exists();
+
+                if ($overlap) {
+                    return back()->withInput()->with('error', 'La habitación ya no está disponible para estas fechas (alguien más pudo haberla tomado).');
+                }
+
+                // Calcular precio total
+                $totalPrice = Reservation::calculateTotal($request->room_id, $request->check_in, $request->check_out);
+
+                $reservation = Reservation::create([
+                    'cliente_id' => $request->cliente_id,
+                    'room_id' => $request->room_id,
+                    'check_in' => $request->check_in,
+                    'check_out' => $request->check_out,
+                    'total_price' => $totalPrice,
+                    'status' => 'confirmada',
+                    'notes' => $request->notes,
+                ]);
+
+                // Sincronizar estado de la habitación de inmediato
+                $room->syncStatus();
+
+                return redirect()->route('reservations.index')
+                    ->with('success', 'Reserva #' . $reservation->id . ' confirmada. Total: $' . number_format($totalPrice, 2));
+            });
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Error al procesar la reserva: ' . $e->getMessage());
         }
-
-        // Calcular precio total
-        $totalPrice = Reservation::calculateTotal($request->room_id, $request->check_in, $request->check_out);
-
-        $data = $request->all();
-        $data['total_price'] = $totalPrice;
-        $data['status'] = 'confirmada'; // Por defecto para este flujo
-
-        Reservation::create($data);
-
-        return redirect()->route('reservations.index')
-            ->with('success', 'Reserva creada correctamente. Total: $' . number_format($totalPrice, 2));
     }
 
     public function show(Reservation $reservation)
