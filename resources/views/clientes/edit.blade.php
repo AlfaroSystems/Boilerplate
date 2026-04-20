@@ -116,21 +116,6 @@
                     @error('direccion_completa') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                 </div>
 
-                <!-- Tipo de Asentamiento -->
-                <div class="space-y-2 max-w-md">
-                    <label for="tipo_asentamiento" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Tipo de Asentamiento</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
-                            <input type="radio" name="tipo_asentamiento" value="canton" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" {{ old('tipo_asentamiento', $cliente->tipo_asentamiento) == 'canton' ? 'checked' : '' }}>
-                            <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Cantón</span>
-                        </label>
-                        <label class="relative flex items-center p-3 rounded-xl border border-[#e3e3e0] dark:border-[#3E3E3A] cursor-pointer hover:bg-gray-50 dark:hover:bg-[#1C1C1B] transition-all">
-                            <input type="radio" name="tipo_asentamiento" value="colonia" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" {{ old('tipo_asentamiento', $cliente->tipo_asentamiento) == 'colonia' ? 'checked' : '' }}>
-                            <span class="ml-3 text-sm font-medium text-gray-700 dark:text-[#EDEDEC]">Colonia</span>
-                        </label>
-                    </div>
-                    @error('tipo_asentamiento') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-                </div>
 
                 <div class="pt-6 flex gap-4">
                     <button type="submit"

@@ -20,7 +20,6 @@
                 <tr class="bg-gray-50 dark:bg-[#1C1C1B] border-b border-[#e3e3e0] dark:border-[#3E3E3A]">
                     <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-[#A1A09A] uppercase tracking-wider">Nombre Completo</th>
                     <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-[#A1A09A] uppercase tracking-wider">Ubicación</th>
-                    <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-[#A1A09A] uppercase tracking-wider">Tipo Asentamiento</th>
                     <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-[#A1A09A] uppercase tracking-wider text-right">Acciones</th>
                 </tr>
             </thead>
@@ -33,11 +32,6 @@
                         <td class="px-6 py-4">
                             <div class="text-sm text-gray-600 dark:text-[#EDEDEC]">{{ $cliente->distrito }}, {{ $cliente->municipio }}</div>
                             <div class="text-[10px] text-gray-400 dark:text-[#A1A09A] uppercase">{{ $cliente->departamento }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-[10px] font-bold uppercase rounded-md {{ $cliente->tipo_asentamiento == 'colonia' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' }}">
-                                {{ $cliente->tipo_asentamiento }}
-                            </span>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">

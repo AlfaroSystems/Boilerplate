@@ -15,7 +15,6 @@ class Cliente extends Model
         'departamento',
         'municipio',
         'distrito',
-        'tipo_asentamiento',
         'direccion_completa',
         'telefono',
         'correo_electronico',

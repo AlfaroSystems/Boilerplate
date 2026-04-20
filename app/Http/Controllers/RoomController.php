@@ -14,6 +14,12 @@ class RoomController extends Controller
         Gate::authorize('gestionar-habitaciones');
 
         $rooms = Room::all();
+
+        // Sincronizar estados automáticamente basado en reservas
+        foreach ($rooms as $room) {
+            $room->syncStatus();
+        }
+
         return view('rooms.index', compact('rooms'));
     }
 
@@ -34,15 +40,23 @@ class RoomController extends Controller
             'room_number' => 'required|string|max:50|unique:rooms,room_number',
             'type' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|string',
-            'available_from' => 'nullable|date',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ], [
             'room_number.unique' => 'Este número de habitación ya está registrado',
             'room_number.required' => 'El número de habitación es obligatorio',
             'price.required' => 'El precio es obligatorio',
         ]);
 
-        Room::create($request->all());
+        $data = $request->all();
+        $data['status'] = 'disponible'; // Forzado según requerimiento
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('rooms', 'public');
+            $data['image_path'] = $path;
+        }
+
+        Room::create($data);
 
         return redirect()->route('rooms.index')
             ->with('success', 'Habitación registrada correctamente');
@@ -65,13 +79,20 @@ class RoomController extends Controller
             'room_number' => 'required|string|max:50|unique:rooms,room_number,' . $room->id,
             'type' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|string',
-            'available_from' => 'nullable|date',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ], [
             'room_number.unique' => 'Este número de habitación ya está en uso',
         ]);
 
-        $room->update($request->all());
+        $data = $request->all();
+        
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('rooms', 'public');
+            $data['image_path'] = $path;
+        }
+
+        $room->update($data);
 
         return redirect()->route('rooms.index')
             ->with('success', 'Habitación actualizada correctamente');

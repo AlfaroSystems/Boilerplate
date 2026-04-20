@@ -78,6 +78,14 @@
                         class="block px-4 py-2 rounded-lg {{ request()->routeIs('rooms.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Gestión de Habitaciones
                     </a>
+                    <a href="{{ route('seasonal-prices.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('seasonal-prices.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Precios por Temporada
+                    </a>
+                    <a href="{{ route('reservations.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('reservations.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        Reservaciones
+                    </a>
                 @endcan
 
             </nav>

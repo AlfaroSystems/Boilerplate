@@ -13,6 +13,9 @@ Route::get('/', function () {
 
 // Dashboard
 Route::get('/dashboard', function () {
+    // Sincronizar estados automáticamente
+    Room::all()->each->syncStatus();
+
     $totalRooms = Room::count();
     $availableRooms = Room::where('status', 'disponible')->count();
     $occupiedRooms = Room::where('status', 'ocupada')->count();
@@ -42,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Gestión de habitaciones
     Route::resource('rooms', RoomController::class);
+    Route::resource('seasonal-prices', \App\Http\Controllers\SeasonalPriceController::class);
+    Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
 });
 
 require __DIR__ . '/auth.php';

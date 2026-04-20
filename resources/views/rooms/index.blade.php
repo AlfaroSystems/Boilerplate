@@ -21,6 +21,7 @@
         <thead class="bg-gray-100 dark:bg-[#1C1C1B] text-gray-700 dark:text-gray-300 uppercase text-xs">
             <tr>
                 <th class="px-6 py-3">#</th>
+                <th class="px-6 py-3">Imagen</th>
                 <th class="px-6 py-3">Número</th>
                 <th class="px-6 py-3">Tipo</th>
                 <th class="px-6 py-3">Precio</th>
@@ -36,6 +37,15 @@
 
                     <!-- ID -->
                     <td class="px-6 py-4">{{ $room->id }}</td>
+
+                    <!-- Imagen -->
+                    <td class="px-6 py-4">
+                        @if($room->image_path)
+                            <img src="{{ asset('storage/' . $room->image_path) }}" alt="Room" class="w-12 h-12 object-cover rounded shadow">
+                        @else
+                            <div class="w-12 h-12 bg-gray-200 dark:bg-[#3E3E3A] rounded flex items-center justify-center text-[10px] text-gray-400">N/A</div>
+                        @endif
+                    </td>
 
                     <!--numero de habitacion-->
                     <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">

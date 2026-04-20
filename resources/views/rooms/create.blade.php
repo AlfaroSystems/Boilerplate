@@ -22,14 +22,15 @@
     <!-- CARD -->
     <div class="bg-white dark:bg-[#161615] p-6 rounded-xl shadow">
 
-        <form action="{{ route('rooms.store') }}" method="POST" class="space-y-4">
+        <form action="{{ route('rooms.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
 
+            <!-- Número -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Número de habitación
                 </label>
-                <input type="text" name="room_number" value="{{ old('room_number') }}"
+                <input type="text" name="room_number" value="{{ old('room_number') }}" required
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
@@ -38,7 +39,7 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Tipo
                 </label>
-                <select name="type"
+                <select name="type" required
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     <option value="individual" {{ old('type') == 'individual' ? 'selected' : '' }}>Individual</option>
                     <option value="familiar" {{ old('type') == 'familiar' ? 'selected' : '' }}>Familiar</option>
@@ -49,31 +50,27 @@
             <!-- Precio -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Precio por noche
+                    Precio Base por noche
                 </label>
-                <input type="number" step="0.01" name="price" value="{{ old('price') }}"
+                <input type="number" step="0.01" name="price" value="{{ old('price') }}" required
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
-            <!-- Estado -->
+            <!-- Descripción (Contenido) -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Estado
+                    ¿Qué contiene la habitación? (Camas, baño, etc.)
                 </label>
-                <select name="status"
-                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-                    <option value="disponible" {{ old('status') == 'disponible' ? 'selected' : '' }}>Disponible</option>
-                    <option value="ocupada" {{ old('status') == 'ocupada' ? 'selected' : '' }}>Ocupada</option>
-                    <option value="mantenimiento" {{ old('status') == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
-                </select>
+                <textarea name="description" rows="3"
+                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('description') }}</textarea>
             </div>
 
-            <!-- Fecha -->
+            <!-- Fotografía -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Disponible desde
+                    Fotografía de la habitación
                 </label>
-                <input type="date" name="available_from" value="{{ old('available_from') }}"
+                <input type="file" name="image" accept="image/*"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
