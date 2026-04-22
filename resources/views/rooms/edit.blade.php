@@ -22,16 +22,15 @@
     <!-- CARD -->
     <div class="bg-white dark:bg-[#161615] p-6 rounded-xl shadow">
 
-        <form action="{{ route('rooms.update', $room) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form action="{{ route('rooms.update', $room) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
 
-            <!-- Número -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Número de habitación
                 </label>
-                <input type="text" name="room_number" value="{{ old('room_number', $room->room_number) }}" required
+                <input type="text" name="room_number" value="{{ old('room_number', $room->room_number) }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
@@ -40,7 +39,7 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Tipo
                 </label>
-                <select name="type" required
+                <select name="type"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     <option value="individual" {{ old('type', $room->type) == 'individual' ? 'selected' : '' }}>Individual</option>
                     <option value="familiar" {{ old('type', $room->type) == 'familiar' ? 'selected' : '' }}>Familiar</option>
@@ -51,32 +50,31 @@
             <!-- Precio -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Precio Base por noche
+                    Precio por noche
                 </label>
-                <input type="number" step="0.01" name="price" value="{{ old('price', $room->price) }}" required
+                <input type="number" step="0.01" name="price" value="{{ old('price', $room->price) }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
-            <!-- Descripción -->
+            <!-- Estado -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    ¿Qué contiene la habitación? (Camas, baño, etc.)
+                    Estado
                 </label>
-                <textarea name="description" rows="3"
-                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('description', $room->description) }}</textarea>
+                <select name="status"
+                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                    <option value="disponible" {{ old('status', $room->status) == 'disponible' ? 'selected' : '' }}>Disponible</option>
+                    <option value="ocupada" {{ old('status', $room->status) == 'ocupada' ? 'selected' : '' }}>Ocupada</option>
+                    <option value="mantenimiento" {{ old('status', $room->status) == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
+                </select>
             </div>
 
-            <!-- Fotografía -->
+            <!-- Fecha -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Fotografía de la habitación
+                    Disponible desde
                 </label>
-                @if($room->image_path)
-                    <div class="mb-2">
-                        <img src="{{ asset('storage/' . $room->image_path) }}" alt="Habitación" class="w-32 h-20 object-cover rounded border dark:border-[#3E3E3A]">
-                    </div>
-                @endif
-                <input type="file" name="image" accept="image/*"
+                <input type="date" name="available_from" value="{{ old('available_from', $room->available_from ? \Carbon\Carbon::parse($room->available_from)->format('Y-m-d') : '') }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
