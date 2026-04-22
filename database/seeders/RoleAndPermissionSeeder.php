@@ -14,16 +14,33 @@ class RoleAndPermissionSeeder extends Seeder
         // Limpiar caché de permisos
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Crear Permisos
-        Permission::firstOrCreate(['name' => 'acceder-dashboard']);
-        Permission::firstOrCreate(['name' => 'editar-perfil']);
-        Permission::firstOrCreate(['name' => 'eliminar-cuenta']);
-        Permission::firstOrCreate(['name' => 'gestionar-usuarios']);
-        Permission::firstOrCreate(['name' => 'gestionar-roles']);
-        Permission::firstOrCreate(['name' => 'gestionar-clientes']);
-        Permission::firstOrCreate(['name' => 'gestionar-habitaciones']);
+        // 1. Permisos fijos de sistema
+        $permisosFijos = [
+            'acceder-dashboard',
+            'editar-perfil',
+            'eliminar-cuenta',
+        ];
 
-        // Crear Roles y asignar permisos
+        foreach ($permisosFijos as $p) {
+            Permission::firstOrCreate(['name' => $p]);
+        }
+
+        // 2. Descubrimiento Automático de Módulos (Basado en Carpetas de Vistas)
+        $vistasPath = resource_path('views');
+        $directorios = array_filter(glob($vistasPath . '/*'), 'is_dir');
+        
+        $carpetasIgnoradas = ['auth', 'layouts', 'components', 'profile'];
+
+        foreach ($directorios as $path) {
+            $nombreCarpeta = basename($path);
+            
+            if (!in_array($nombreCarpeta, $carpetasIgnoradas)) {
+                // Crear permiso dinámico: gestionar-{nombre_carpeta}
+                Permission::firstOrCreate(['name' => "gestionar-{$nombreCarpeta}"]);
+            }
+        }
+
+        // 3. Crear Roles y asignar permisos
         $roleAdmin = Role::firstOrCreate(['name' => 'Admin']);
         $roleAdmin->syncPermissions(Permission::all());
 

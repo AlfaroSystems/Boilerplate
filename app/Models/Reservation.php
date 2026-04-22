@@ -46,14 +46,20 @@ class Reservation extends Model
         $end = Carbon::parse($endDate);
         $total = 0;
 
+        // Obtener todos los precios estacionales relevantes en una sola consulta
+        $seasonalPrices = $room->seasonalPrices()
+            ->where('start_date', '<=', $end->format('Y-m-d'))
+            ->where('end_date', '>=', $start->format('Y-m-d'))
+            ->get();
+
         // Iterar por cada noche (desde start hasta antes de end)
         for ($date = $start->copy(); $date->lt($end); $date->addDay()) {
+            $currentDateStr = $date->format('Y-m-d');
             
-            // Buscar si hay un precio de temporada para esta fecha
-            $seasonal = $room->seasonalPrices()
-                ->where('start_date', '<=', $date->format('Y-m-d'))
-                ->where('end_date', '>=', $date->format('Y-m-d'))
-                ->first();
+            // Buscar en la colección cargada si hay un precio de temporada para esta fecha
+            $seasonal = $seasonalPrices->first(function ($price) use ($currentDateStr) {
+                return $price->start_date <= $currentDateStr && $price->end_date >= $currentDateStr;
+            });
 
             if ($seasonal) {
                 $total += $seasonal->price;

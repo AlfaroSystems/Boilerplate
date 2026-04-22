@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        Gate::authorize('gestionar-usuarios');
+        Gate::authorize('gestionar-users');
         $users = User::all();
         return view('users.index', compact('users'));
     }
@@ -24,14 +24,14 @@ class UserController extends Controller
 
     public function create(): View
     {
-        Gate::authorize('gestionar-usuarios');
+        Gate::authorize('gestionar-users');
         $roles = Role::all();
         return view('users.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
-        Gate::authorize('gestionar-usuarios');
+        Gate::authorize('gestionar-users');
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
@@ -59,14 +59,14 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        Gate::authorize('gestionar-usuarios');
+        Gate::authorize('gestionar-users');
         $roles = Role::all();
         return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
     {
-        Gate::authorize('gestionar-usuarios');
+        Gate::authorize('gestionar-users');
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],

@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Room;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreRoomRequest;
+use App\Http\Requests\UpdateRoomRequest;
 
 class RoomController extends Controller
 {
     // LISTAR
     public function index()
     {
-        Gate::authorize('gestionar-habitaciones');
-
-        // Sincronizar estados de forma masiva (Alta Eficiencia)
-        Room::syncAllStatuses();
+        Gate::authorize('gestionar-rooms');
 
         $rooms = Room::all();
 
@@ -24,29 +23,15 @@ class RoomController extends Controller
     // FORM CREAR
     public function create()
     {
-        Gate::authorize('gestionar-habitaciones');
+        Gate::authorize('gestionar-rooms');
 
         return view('rooms.create');
     }
 
     // GUARDAR
-    public function store(Request $request)
+    public function store(StoreRoomRequest $request)
     {
-        Gate::authorize('gestionar-habitaciones');
-
-        $request->validate([
-            'room_number' => 'required|string|max:50|unique:rooms,room_number',
-            'type' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
-        ], [
-            'room_number.unique' => 'Este número de habitación ya está registrado',
-            'room_number.required' => 'El número de habitación es obligatorio',
-            'price.required' => 'El precio es obligatorio',
-        ]);
-
-        $data = $request->all();
+        $data = $request->validated();
         $data['status'] = 'disponible'; // Forzado según requerimiento
 
         if ($request->hasFile('image')) {
@@ -63,27 +48,15 @@ class RoomController extends Controller
     // FORM EDITAR
     public function edit(Room $room)
     {
-        Gate::authorize('gestionar-habitaciones');
+        Gate::authorize('gestionar-rooms');
 
         return view('rooms.edit', compact('room'));
     }
 
     // ACTUALIZAR
-    public function update(Request $request, Room $room)
+    public function update(UpdateRoomRequest $request, Room $room)
     {
-        Gate::authorize('gestionar-habitaciones');
-
-        $request->validate([
-            'room_number' => 'required|string|max:50|unique:rooms,room_number,' . $room->id,
-            'type' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
-        ], [
-            'room_number.unique' => 'Este número de habitación ya está en uso',
-        ]);
-
-        $data = $request->all();
+        $data = $request->validated();
         
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('rooms', 'public');
@@ -99,7 +72,7 @@ class RoomController extends Controller
     // ELIMINAR
     public function destroy(Room $room)
     {
-        Gate::authorize('gestionar-habitaciones');
+        Gate::authorize('gestionar-rooms');
 
         $room->delete();
 

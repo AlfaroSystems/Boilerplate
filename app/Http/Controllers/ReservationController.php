@@ -7,31 +7,28 @@ use App\Models\Room;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreReservationRequest;
 
 class ReservationController extends Controller
 {
     public function index()
     {
+        Gate::authorize('gestionar-reservations');
         $reservations = Reservation::with(['cliente', 'room'])->latest()->get();
         return view('reservations.index', compact('reservations'));
     }
 
     public function create()
     {
+        Gate::authorize('gestionar-reservations');
         $rooms = Room::all();
         $clientes = Cliente::all();
         return view('reservations.create', compact('rooms', 'clientes'));
     }
 
-    public function store(Request $request)
+    public function store(StoreReservationRequest $request)
     {
-        $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
-            'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
-            'notes' => 'nullable|string',
-        ]);
 
         try {
             return DB::transaction(function () use ($request) {
@@ -76,11 +73,13 @@ class ReservationController extends Controller
 
     public function show(Reservation $reservation)
     {
+        Gate::authorize('gestionar-reservations');
         return view('reservations.show', compact('reservation'));
     }
 
     public function edit(Reservation $reservation)
     {
+        Gate::authorize('gestionar-reservations');
         $rooms = Room::all();
         $clientes = Cliente::all();
         return view('reservations.edit', compact('reservation', 'rooms', 'clientes'));
@@ -88,6 +87,7 @@ class ReservationController extends Controller
 
     public function update(Request $request, Reservation $reservation)
     {
+        Gate::authorize('gestionar-reservations');
         $request->validate([
             'status' => 'required|in:pendiente,confirmada,cancelada,completada',
             'notes' => 'nullable|string',
@@ -101,6 +101,7 @@ class ReservationController extends Controller
 
     public function destroy(Reservation $reservation)
     {
+        Gate::authorize('gestionar-reservations');
         $reservation->delete();
         return redirect()->route('reservations.index')
             ->with('success', 'Reserva eliminada correctamente');

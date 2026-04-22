@@ -28,6 +28,14 @@ class Room extends Model
      */
     public static function syncAllStatuses()
     {
+        // Ejecutar máximo una vez cada hora para ahorrar recursos
+        $cacheKey = 'rooms_last_sync_hour';
+        $currentHour = now()->format('Y-m-d-H');
+
+        if (\Illuminate\Support\Facades\Cache::get($cacheKey) === $currentHour) {
+            return;
+        }
+
         $today = now()->format('Y-m-d');
 
         // 1. Resetear todas a disponible (excepto las que están en mantenimiento manual)
@@ -45,6 +53,8 @@ class Room extends Model
                 ->where('status', '!=', 'mantenimiento')
                 ->update(['status' => 'ocupada']);
         }
+
+        \Illuminate\Support\Facades\Cache::put($cacheKey, $currentHour, 3600);
     }
 
     /**

@@ -5,32 +5,39 @@ namespace App\Http\Controllers;
 use App\Models\SeasonalPrice;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreSeasonalPriceRequest;
+use App\Http\Requests\UpdateSeasonalPriceRequest;
 
 class SeasonalPriceController extends Controller
 {
     public function index()
     {
+        Gate::authorize('gestionar-seasonal_prices');
         $prices = SeasonalPrice::with('room')->get();
         return view('seasonal_prices.index', compact('prices'));
     }
 
     public function create()
     {
+        Gate::authorize('gestionar-seasonal_prices');
         $rooms = Room::all();
         return view('seasonal_prices.create', compact('rooms'));
     }
 
-    public function store(Request $request)
+    public function store(StoreSeasonalPriceRequest $request)
     {
-        $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string|max:255',
-        ]);
+        // Validación de solapamiento
+        $overlap = SeasonalPrice::where('room_id', $request->room_id)
+            ->where('start_date', '<', $request->end_date)
+            ->where('end_date', '>', $request->start_date)
+            ->exists();
 
-        SeasonalPrice::create($request->all());
+        if ($overlap) {
+            return back()->withInput()->with('error', 'Ya existe un precio configurado que se solapa con estas fechas para esta habitación.');
+        }
+
+        SeasonalPrice::create($request->validated());
 
         return redirect()->route('seasonal-prices.index')
             ->with('success', 'Precio por temporada registrado correctamente');
@@ -38,21 +45,25 @@ class SeasonalPriceController extends Controller
 
     public function edit(SeasonalPrice $seasonalPrice)
     {
+        Gate::authorize('gestionar-seasonal_prices');
         $rooms = Room::all();
         return view('seasonal_prices.edit', compact('seasonalPrice', 'rooms'));
     }
 
-    public function update(Request $request, SeasonalPrice $seasonalPrice)
+    public function update(UpdateSeasonalPriceRequest $request, SeasonalPrice $seasonalPrice)
     {
-        $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'price' => 'required|numeric|min:0',
-            'description' => 'nullable|string|max:255',
-        ]);
+        // Validación de solapamiento (excluyendo el actual)
+        $overlap = SeasonalPrice::where('room_id', $request->room_id)
+            ->where('id', '!=', $seasonalPrice->id)
+            ->where('start_date', '<', $request->end_date)
+            ->where('end_date', '>', $request->start_date)
+            ->exists();
 
-        $seasonalPrice->update($request->all());
+        if ($overlap) {
+            return back()->withInput()->with('error', 'Ya existe otro precio configurado que se solapa con estas fechas.');
+        }
+
+        $seasonalPrice->update($request->validated());
 
         return redirect()->route('seasonal-prices.index')
             ->with('success', 'Precio por temporada actualizado correctamente');
@@ -60,6 +71,7 @@ class SeasonalPriceController extends Controller
 
     public function destroy(SeasonalPrice $seasonalPrice)
     {
+        Gate::authorize('gestionar-precios');
         $seasonalPrice->delete();
         return redirect()->route('seasonal-prices.index')
             ->with('success', 'Precio por temporada eliminado correctamente');
