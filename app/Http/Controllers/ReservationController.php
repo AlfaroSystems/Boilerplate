@@ -15,14 +15,21 @@ class ReservationController extends Controller
     public function index()
     {
         Gate::authorize('gestionar-reservations');
+        $rooms = Room::with('images')->get();
+        return view('reservations.index', compact('rooms'));
+    }
+
+    public function reservations()
+    {
+        Gate::authorize('gestionar-reservations');
         $reservations = Reservation::with(['cliente', 'room'])->latest()->get();
-        return view('reservations.index', compact('reservations'));
+        return view('reservations.reservations', compact('reservations'));
     }
 
     public function create()
     {
         Gate::authorize('gestionar-reservations');
-        $rooms = Room::all();
+        $rooms = Room::where('status', 'disponible')->with('images')->get();
         $clientes = Cliente::all();
         return view('reservations.create', compact('rooms', 'clientes'));
     }

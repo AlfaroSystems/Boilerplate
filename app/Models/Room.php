@@ -81,6 +81,11 @@ class Room extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(RoomImage::class);
+    }
+
     /**
      * Determina si la habitación está ocupada actualmente basado en reservas confirmadas.
      */

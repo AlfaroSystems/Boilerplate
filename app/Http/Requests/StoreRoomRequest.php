@@ -21,7 +21,8 @@ class StoreRoomRequest extends FormRequest
             'type' => 'required|string',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|max:2048',
         ];
     }
 

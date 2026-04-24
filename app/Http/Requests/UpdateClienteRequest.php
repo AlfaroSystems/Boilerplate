@@ -26,6 +26,7 @@ class UpdateClienteRequest extends FormRequest
             'telefono' => 'required|string|max:20',
             'correo_electronico' => 'nullable|email|max:255',
             'dui' => 'required|string|max:10',
+            'nrc' => 'nullable|string|max:20',
         ];
     }
 }

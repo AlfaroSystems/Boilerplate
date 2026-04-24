@@ -59,6 +59,13 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label for="nrc" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">NRC</label>
+                        <input type="text" name="nrc" id="nrc" value="{{ old('nrc', $cliente->nrc) }}" placeholder="000000-0"
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">
+                        @error('nrc') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
                         <label for="telefono" class="text-sm font-bold text-gray-700 dark:text-[#EDEDEC]">Teléfono</label>
                         <input type="text" name="telefono" id="telefono" value="{{ old('telefono', $cliente->telefono) }}" required placeholder="XXXX-XXXX"
                             class="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1C1C1B] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none dark:text-white">

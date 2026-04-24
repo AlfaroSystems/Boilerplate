@@ -18,6 +18,7 @@ class Cliente extends Model
         'direccion_completa',
         'telefono',
         'correo_electronico',
-        'dui'
+        'dui',
+        'nrc'
     ];
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Models\RoomImage;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
@@ -34,12 +35,20 @@ class RoomController extends Controller
         $data = $request->validated();
         $data['status'] = 'disponible'; // Forzado según requerimiento
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('rooms', 'public');
-            $data['image_path'] = $path;
-        }
+        $room = Room::create($data);
 
-        Room::create($data);
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('rooms', 'public');
+                
+                // La primera imagen será la principal
+                if ($index === 0) {
+                    $room->update(['image_path' => $path]);
+                } else {
+                    $room->images()->create(['image_path' => $path]);
+                }
+            }
+        }
 
         return redirect()->route('rooms.index')
             ->with('success', 'Habitación registrada correctamente');
@@ -49,6 +58,7 @@ class RoomController extends Controller
     public function edit(Room $room)
     {
         Gate::authorize('gestionar-rooms');
+        $room->load('images');
 
         return view('rooms.edit', compact('room'));
     }
@@ -58,12 +68,14 @@ class RoomController extends Controller
     {
         $data = $request->validated();
         
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('rooms', 'public');
-            $data['image_path'] = $path;
-        }
-
         $room->update($data);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('rooms', 'public');
+                $room->images()->create(['image_path' => $path]);
+            }
+        }
 
         return redirect()->route('rooms.index')
             ->with('success', 'Habitación actualizada correctamente');

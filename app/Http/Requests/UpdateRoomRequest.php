@@ -21,8 +21,11 @@ class UpdateRoomRequest extends FormRequest
             'room_number' => 'required|string|max:50|unique:rooms,room_number,' . $room->id,
             'type' => 'required|string',
             'price' => 'required|numeric|min:0',
+            'status' => 'required|string|in:disponible,ocupada,mantenimiento',
+            'available_from' => 'nullable|date',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|max:2048',
         ];
     }
 

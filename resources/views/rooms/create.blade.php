@@ -68,9 +68,9 @@
             <!-- Fotografía -->
             <div>
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
-                    Fotografía de la habitación
+                    Fotografías de la habitación (Puedes seleccionar varias)
                 </label>
-                <input type="file" name="image" accept="image/*"
+                <input type="file" name="images[]" accept="image/*" multiple
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 

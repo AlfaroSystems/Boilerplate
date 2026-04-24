@@ -22,8 +22,9 @@ Route::get('/dashboard', function () {
     $totalClients = Cliente::count();
     
     $occupancyRate = $totalRooms > 0 ? ($occupiedRooms / $totalRooms) * 100 : 0;
+    $rooms = Room::with('images')->get();
 
-    return view('dashboard', compact('totalRooms', 'availableRooms', 'occupiedRooms', 'totalClients', 'occupancyRate'));
+    return view('dashboard', compact('totalRooms', 'availableRooms', 'occupiedRooms', 'totalClients', 'occupancyRate', 'rooms'));
 })->middleware(['auth', 'can:acceder-dashboard'])->name('dashboard');
 
 // Perfil
@@ -46,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
     // Gestión de habitaciones
     Route::resource('rooms', RoomController::class);
     Route::resource('seasonal-prices', \App\Http\Controllers\SeasonalPriceController::class);
+    
+    Route::get('reservations/list', [\App\Http\Controllers\ReservationController::class, 'reservations'])->name('reservations.reservations');
     Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
 });
 

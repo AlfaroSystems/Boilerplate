@@ -1,79 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-8">
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Listado de Reservas</h1>
-        <a href="{{ route('reservations.create') }}" 
-           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition text-sm font-bold uppercase shadow-lg">
-            Nueva Reserva
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Catálogo de Habitaciones</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Seleccione una habitación para iniciar una nueva reservación.</p>
+        </div>
+        <a href="{{ route('reservations.reservations') }}"
+            class="px-5 py-2.5 bg-gray-100 dark:bg-[#1C1C1B] text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 transition text-sm font-bold shadow-sm border border-gray-200 dark:border-[#3E3E3A]">
+            Ver Listado de Reservas
         </a>
     </div>
 
-    <!-- TABLA DE RESERVAS -->
-    <div class="bg-white dark:bg-[#161615] rounded-2xl shadow-sm border border-gray-100 dark:border-[#2a2a2a] overflow-hidden">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-50 dark:bg-[#1C1C1B] border-b dark:border-[#3E3E3A]">
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">Cliente</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">Habitación</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-center">Fechas</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-right">Total</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-center">Estado</th>
-                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y dark:divide-[#3E3E3A]">
-                @forelse($reservations as $res)
-                <tr class="hover:bg-gray-50/50 dark:hover:bg-[#1C1C1B]/50 transition">
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-gray-900 dark:text-white">{{ $res->cliente->nombre }} {{ $res->cliente->apellido }}</div>
-                        <div class="text-xs text-gray-500">{{ $res->cliente->dui }}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded text-xs font-bold">
-                            #{{ $res->room->room_number }} - {{ $res->room->type }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-center text-sm dark:text-gray-300">
-                        <div class="font-medium">{{ $res->check_in->format('d M, Y') }}</div>
-                        <div class="text-xs text-gray-400">al {{ $res->check_out->format('d M, Y') }}</div>
-                    </td>
-                    <td class="px-6 py-4 text-right font-bold text-indigo-600 dark:text-indigo-400">
-                        ${{ number_format($res->total_price, 2) }}
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        @php
-                            $statusColors = [
-                                'pendiente' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-                                'confirmada' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-                                'cancelada' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-                                'completada' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-                            ];
-                        @endphp
-                        <span class="px-3 py-1 rounded-full text-xs font-bold {{ $statusColors[$res->status] ?? 'bg-gray-100 text-gray-700' }}">
-                            {{ ucfirst($res->status) }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <div class="flex items-center justify-end gap-3 text-sm">
-                            <a href="{{ route('reservations.show', $res) }}" class="text-indigo-500 hover:text-indigo-700 font-medium">Detalles</a>
-                            <form action="{{ route('reservations.destroy', $res) }}" method="POST" onsubmit="return confirm('¿Eliminar reserva?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-red-400 hover:text-red-600">Eliminar</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-gray-400 dark:text-gray-500">
-                        No se encontraron reservaciones registradas.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <!-- LISTADO DE HABITACIONES (Airbnb Style) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        @foreach($rooms as $room)
+        <a href="{{ route('reservations.create', ['room_id' => $room->id]) }}" class="group cursor-pointer block">
+            <!-- Imagen -->
+            <div class="relative aspect-square overflow-hidden rounded-2xl mb-4 shadow-md transition-all duration-300 group-hover:shadow-xl">
+                <img src="{{ $room->image_path ? asset('storage/' . $room->image_path) : asset('img/no-room.jpg') }}"
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+
+                <!-- Badge -->
+                <div class="absolute top-4 left-4 bg-white/95 dark:bg-black/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg">
+                    <span class="text-[11px] font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
+                        {{ $room->status == 'disponible' ? 'Disponible' : 'Ocupado' }}
+                    </span>
+                </div>
+
+                <!-- Heart Icon (Decoration) -->
+                <div class="absolute top-4 right-4 text-white/90 hover:text-red-500 transition-colors drop-shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Detalles -->
+            <div class="space-y-1.5 px-1">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-gray-900 dark:text-white text-lg tracking-tight">Habitación #{{ $room->room_number }}</h3>
+                    <div class="flex items-center gap-1.5 text-sm">
+                        <span class="text-yellow-400">★</span>
+                        <span class="font-bold text-gray-900 dark:text-white">5.0</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 font-medium">{{ $room->type }} • {{ $room->description ?? 'Confort y elegancia asegurada' }}</p>
+                <p class="text-sm text-gray-400 dark:text-gray-500 font-medium">Sistema de reserva inmediata</p>
+                <div class="pt-1.5 flex items-baseline gap-1">
+                    <span class="font-black text-gray-900 dark:text-white text-lg">${{ number_format($room->price, 2) }}</span>
+                    <span class="text-gray-500 dark:text-gray-400 text-sm font-bold">noche</span>
+                </div>
+            </div>
+        </a>
+        @endforeach
     </div>
 </div>
 @endsection

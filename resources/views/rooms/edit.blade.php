@@ -22,7 +22,7 @@
     <!-- CARD -->
     <div class="bg-white dark:bg-[#161615] p-6 rounded-xl shadow">
 
-        <form action="{{ route('rooms.update', $room) }}" method="POST" class="space-y-4">
+        <form action="{{ route('rooms.update', $room) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
 
@@ -53,6 +53,43 @@
                     Precio por noche
                 </label>
                 <input type="number" step="0.01" name="price" value="{{ old('price', $room->price) }}"
+                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+            </div>
+
+            <!-- Descripción -->
+            <div>
+                <label class="block font-semibold text-gray-700 dark:text-gray-300">
+                    ¿Qué contiene la habitación? (Camas, baño, etc.)
+                </label>
+                <textarea name="description" rows="3"
+                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('description', $room->description) }}</textarea>
+            </div>
+
+            <!-- Fotografías -->
+            <div>
+                <label class="block font-semibold text-gray-700 dark:text-gray-300">
+                    Fotografías de la habitación
+                </label>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                    <!-- Imagen Principal -->
+                    @if($room->image_path)
+                        <div class="relative group">
+                            <img src="{{ asset('storage/' . $room->image_path) }}" alt="Principal" class="w-full h-24 object-cover rounded-lg shadow-sm border-2 border-indigo-500">
+                            <span class="absolute top-1 left-1 bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded uppercase font-bold">Principal</span>
+                        </div>
+                    @endif
+
+                    <!-- Imágenes Adicionales -->
+                    @foreach($room->images as $img)
+                        <div class="relative group">
+                            <img src="{{ asset('storage/' . $img->image_path) }}" alt="Adicional" class="w-full h-24 object-cover rounded-lg shadow-sm">
+                        </div>
+                    @endforeach
+                </div>
+
+                <p class="text-xs text-gray-500 mb-2 italic">Subir más fotografías (se añadirán a la galería):</p>
+                <input type="file" name="images[]" accept="image/*" multiple
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 

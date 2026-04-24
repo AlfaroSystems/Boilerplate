@@ -71,7 +71,7 @@ class SeasonalPriceController extends Controller
 
     public function destroy(SeasonalPrice $seasonalPrice)
     {
-        Gate::authorize('gestionar-precios');
+        Gate::authorize('gestionar-seasonal_prices');
         $seasonalPrice->delete();
         return redirect()->route('seasonal-prices.index')
             ->with('success', 'Precio por temporada eliminado correctamente');
