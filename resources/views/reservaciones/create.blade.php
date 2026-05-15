@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto">
     <div class="flex items-center gap-4 mb-6">
-        <a href="{{ route('reservations.index') }}" class="p-2 bg-gray-100 dark:bg-[#1C1C1B] rounded-lg hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition">
+        <a href="{{ route('reservaciones.index') }}" class="p-2 bg-gray-100 dark:bg-[#1C1C1B] rounded-lg hover:bg-gray-200 dark:hover:bg-[#2a2a2a] transition">
             <svg class="w-5 h-5 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -11,7 +11,7 @@
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Nueva Reservación</h1>
     </div>
 
-    <form action="{{ route('reservations.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <form action="{{ route('reservaciones.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @csrf
 
         <!-- COLUMNA IZQUIERDA: DATOS -->
@@ -78,39 +78,39 @@
                 </div>
 
                 <!-- Habitación (Selección por Cards) -->
-                <div x-data="{ selectedRoomId: '{{ request('room_id', old('room_id')) }}' }">
+                <div x-data="{ selectedHabitacionId: '{{ request('habitacion_id', old('habitacion_id')) }}' }">
                     <label class="block font-bold text-gray-700 dark:text-gray-300 mb-4 text-lg">Seleccione una Habitación Disponible</label>
                     
-                    <input type="hidden" name="room_id" :value="selectedRoomId" required>
+                    <input type="hidden" name="habitacion_id" :value="selectedHabitacionId" required>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @forelse($rooms as $room)
+                        @forelse($habitaciones as $habitacion)
                             <div 
-                                @click="selectedRoomId = '{{ $room->id }}'"
-                                :class="selectedRoomId == '{{ $room->id }}' ? 'border-indigo-500 ring-2 ring-indigo-500/20' : 'border-gray-200 dark:border-[#2a2a2a] hover:border-indigo-300'"
+                                @click="selectedHabitacionId = '{{ $habitacion->id }}'"
+                                :class="selectedHabitacionId == '{{ $habitacion->id }}' ? 'border-indigo-500 ring-2 ring-indigo-500/20' : 'border-gray-200 dark:border-[#2a2a2a] hover:border-indigo-300'"
                                 class="cursor-pointer group bg-white dark:bg-[#1C1C1B] border rounded-2xl overflow-hidden transition-all duration-300 transform hover:-translate-y-1 shadow-sm"
                             >
                                 <div class="relative h-32 overflow-hidden">
-                                    <img src="{{ $room->image_path ? asset('storage/' . $room->image_path) : asset('img/no-room.jpg') }}" 
+                                    <img src="{{ $habitacion->ruta_imagen ? asset('storage/' . $habitacion->ruta_imagen) : asset('img/no-room.jpg') }}" 
                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                     <div class="absolute top-2 right-2 px-2 py-1 bg-white/90 dark:bg-black/80 rounded-lg text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                                        ${{ number_format($room->price, 2) }}
+                                        ${{ number_format($habitacion->precio, 2) }}
                                     </div>
                                     <div class="absolute bottom-2 left-2 px-2 py-1 bg-indigo-600 rounded-lg text-[10px] font-bold text-white uppercase">
-                                        {{ $room->type }}
+                                        {{ $habitacion->tipo }}
                                     </div>
                                 </div>
                                 <div class="p-3">
                                     <div class="flex items-center justify-between">
-                                        <h4 class="font-bold text-gray-900 dark:text-white">Habitación #{{ $room->room_number }}</h4>
-                                        <div x-show="selectedRoomId == '{{ $room->id }}'" class="text-indigo-500">
+                                        <h4 class="font-bold text-gray-900 dark:text-white">Habitación #{{ $habitacion->numero_habitacion }}</h4>
+                                        <div x-show="selectedHabitacionId == '{{ $habitacion->id }}'" class="text-indigo-500">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                             </svg>
                                         </div>
                                     </div>
                                     <p class="text-[10px] text-gray-500 dark:text-gray-400 line-clamp-1 mt-1">
-                                        {{ $room->description ?? 'Sin descripción disponible.' }}
+                                        {{ $habitacion->descripcion ?? 'Sin descripción disponible.' }}
                                     </p>
                                 </div>
                             </div>
@@ -120,19 +120,19 @@
                             </div>
                         @endforelse
                     </div>
-                    @error('room_id') <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
+                    @error('habitacion_id') <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Fechas -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold text-gray-700 dark:text-gray-300 mb-2">Registro</label>
-                        <input type="date" name="check_in" value="{{ old('check_in', date('Y-m-d')) }}" required
+                        <input type="date" name="fecha_entrada" value="{{ old('fecha_entrada', date('Y-m-d')) }}" required
                             class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     </div>
                     <div>
                         <label class="block font-bold text-gray-700 dark:text-gray-300 mb-2">Salida</label>
-                        <input type="date" name="check_out" value="{{ old('check_out', date('Y-m-d', strtotime('+1 day'))) }}" required
+                        <input type="date" name="fecha_salida" value="{{ old('fecha_salida', date('Y-m-d', strtotime('+1 day'))) }}" required
                             class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                 <!-- Notas -->
                 <div>
                     <label class="block font-bold text-gray-700 dark:text-gray-300 mb-2">Notas Especiales</label>
-                    <textarea name="notes" rows="3" class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('notes') }}</textarea>
+                    <textarea name="notas" rows="3" class="w-full p-2.5 border rounded-xl dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('notas') }}</textarea>
                 </div>
             </div>
         </div>
@@ -166,3 +166,4 @@
     </form>
 </div>
 @endsection
+

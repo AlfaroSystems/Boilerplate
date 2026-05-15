@@ -23,7 +23,7 @@ class ReservacionController extends Controller
     {
         Gate::authorize('gestionar-reservaciones');
         $reservaciones = Reservacion::with(['cliente', 'habitacion'])->latest()->get();
-        return view('reservaciones.reservaciones', compact('reservaciones'));
+        return view('reservaciones.reservations', compact('reservaciones'));
     }
 
     public function create()

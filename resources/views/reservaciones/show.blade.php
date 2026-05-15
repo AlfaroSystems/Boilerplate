@@ -3,13 +3,13 @@
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Detalle de Reserva #{{ $reservation->id }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Detalle de Reserva #{{ $reservacion->id }}</h1>
         <div class="flex gap-2">
             <button onclick="window.print()" class="px-4 py-2 bg-gray-100 dark:bg-[#1C1C1B] dark:text-white rounded-lg hover:bg-gray-200 transition text-sm font-bold flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 Imprimir
             </button>
-            <a href="{{ route('reservations.index') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm">Volver</a>
+            <a href="{{ route('reservaciones.index') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm">Volver</a>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
         <div class="bg-indigo-600 p-8 text-white flex justify-between items-start">
             <div>
                 <div class="text-3xl font-black uppercase tracking-tighter mb-1">COMPROBANTE</div>
-                <div class="opacity-80 text-sm">Reserva Registrada: {{ $reservation->created_at->format('d/m/Y H:i') }}</div>
+                <div class="opacity-80 text-sm">Reserva Registrada: {{ $reservacion->created_at->format('d/m/Y H:i') }}</div>
             </div>
             <div class="text-right">
                 <div class="text-xl font-bold">HOTEL POS</div>
@@ -31,15 +31,15 @@
             <div class="grid grid-cols-2 gap-8 border-b dark:border-[#2a2a2a] pb-8">
                 <div>
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Cliente</h3>
-                    <div class="text-lg font-bold text-gray-900 dark:text-white">{{ $reservation->cliente->nombre }} {{ $reservation->cliente->apellido }}</div>
-                    <div class="text-sm text-gray-500">DUI: {{ $reservation->cliente->dui }}</div>
-                    <div class="text-sm text-gray-500">{{ $reservation->cliente->correo_electronico }}</div>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">{{ $reservacion->cliente->nombre }} {{ $reservacion->cliente->apellido }}</div>
+                    <div class="text-sm text-gray-500">DUI: {{ $reservacion->cliente->dui }}</div>
+                    <div class="text-sm text-gray-500">{{ $reservacion->cliente->correo_electronico }}</div>
                 </div>
                 <div>
                     <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Habitación</h3>
-                    <div class="text-lg font-bold text-gray-900 dark:text-white">Número #{{ $reservation->room->room_number }}</div>
-                    <div class="text-sm text-gray-500">Tipo: {{ ucfirst($reservation->room->type) }}</div>
-                    <div class="text-sm text-gray-500">Estado Reserva: {{ ucfirst($reservation->status) }}</div>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">Número #{{ $reservacion->habitacion->numero_habitacion }}</div>
+                    <div class="text-sm text-gray-500">Tipo: {{ ucfirst($reservacion->habitacion->tipo) }}</div>
+                    <div class="text-sm text-gray-500">Estado Reserva: {{ ucfirst($reservacion->estado) }}</div>
                 </div>
             </div>
 
@@ -47,14 +47,14 @@
             <div class="grid grid-cols-3 gap-4 bg-gray-50 dark:bg-[#1C1C1B] p-6 rounded-2xl text-center">
                 <div>
                     <div class="text-xs font-bold text-gray-400 uppercase mb-1">Llegada</div>
-                    <div class="text-lg font-black dark:text-white">{{ $reservation->check_in->format('d M, Y') }}</div>
+                    <div class="text-lg font-black dark:text-white">{{ $reservacion->fecha_entrada->format('d M, Y') }}</div>
                 </div>
                 <div class="flex items-center justify-center">
                     <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </div>
                 <div>
                     <div class="text-xs font-bold text-gray-400 uppercase mb-1">Salida</div>
-                    <div class="text-lg font-black dark:text-white">{{ $reservation->check_out->format('d M, Y') }}</div>
+                    <div class="text-lg font-black dark:text-white">{{ $reservacion->fecha_salida->format('d M, Y') }}</div>
                 </div>
             </div>
 
@@ -65,14 +65,14 @@
                     <div class="text-sm text-gray-500">Incluye impuestos y precios por temporada</div>
                 </div>
                 <div class="text-4xl font-black text-indigo-600 dark:text-indigo-400">
-                    ${{ number_format($reservation->total_price, 2) }}
+                    ${{ number_format($reservacion->precio_total, 2) }}
                 </div>
             </div>
 
-            @if($reservation->notes)
+            @if($reservacion->notas)
             <div class="pt-4">
                 <h3 class="text-xs font-bold text-gray-400 uppercase mb-2">Notas</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 italic">"{{ $reservation->notes }}"</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 italic">"{{ $reservacion->notas }}"</p>
             </div>
             @endif
         </div>
@@ -93,3 +93,4 @@
 }
 </style>
 @endsection
+

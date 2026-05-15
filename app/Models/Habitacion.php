@@ -42,7 +42,7 @@ class Habitacion extends Model
             ->update(['estado' => 'disponible']);
 
         // 2. Marcar como ocupadas aquellas con reservas confirmadas para hoy
-        $occupiedHabitacionIds = Reservacion::where('status', 'confirmada')
+        $occupiedHabitacionIds = Reservacion::where('estado', 'confirmada')
             ->where('fecha_entrada', '<=', $today)
             ->where('fecha_salida', '>', $today)
             ->pluck('habitacion_id');
@@ -85,7 +85,7 @@ class Habitacion extends Model
     public function getEsOcupadaAttribute()
     {
         return $this->reservaciones()
-            ->where('status', 'confirmada')
+            ->where('estado', 'confirmada')
             ->where('fecha_entrada', '<=', now()->format('Y-m-d'))
             ->where('fecha_salida', '>', now()->format('Y-m-d'))
             ->exists();

@@ -4,7 +4,7 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Precios por Temporada</h1>
-        <a href="{{ route('seasonal-prices.create') }}" 
+        <a href="{{ route('precios-temporada.create') }}" 
            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition text-sm font-bold uppercase">
             Nueva Temporada
         </a>
@@ -22,20 +22,20 @@
                 </tr>
             </thead>
             <tbody class="divide-y dark:divide-[#3E3E3A]">
-                @forelse($prices as $price)
+                @forelse($precios as $precio)
                 <tr class="hover:bg-gray-50/50 dark:hover:bg-[#1C1C1B]/50 transition">
-                    <td class="px-6 py-4 text-sm font-bold dark:text-white">#{{ $price->room->room_number }}</td>
-                    <td class="px-6 py-4 text-sm dark:text-gray-300">{{ $price->description }}</td>
+                    <td class="px-6 py-4 text-sm font-bold dark:text-white">#{{ $precio->habitacion->numero_habitacion }}</td>
+                    <td class="px-6 py-4 text-sm dark:text-gray-300">{{ $precio->descripcion }}</td>
                     <td class="px-6 py-4 text-sm dark:text-gray-300">
-                        {{ \Carbon\Carbon::parse($price->start_date)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($price->end_date)->format('d/m/Y') }}
+                        {{ \Carbon\Carbon::parse($precio->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($precio->fecha_fin)->format('d/m/Y') }}
                     </td>
                     <td class="px-6 py-4 text-sm font-bold text-right text-indigo-600 dark:text-indigo-400">
-                        ${{ number_format($price->price, 2) }}
+                        ${{ number_format($precio->precio, 2) }}
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('seasonal-prices.edit', $price) }}" class="text-blue-500 hover:text-blue-700">Editar</a>
-                            <form action="{{ route('seasonal-prices.destroy', $price) }}" method="POST" onsubmit="return confirm('¿Borrar?');">
+                            <a href="{{ route('precios-temporada.edit', $precio) }}" class="text-blue-500 hover:text-blue-700">Editar</a>
+                            <form action="{{ route('precios-temporada.destroy', $precio) }}" method="POST" onsubmit="return confirm('¿Borrar?');">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="text-red-500 hover:text-red-700">Eliminar</button>
                             </form>
@@ -52,3 +52,4 @@
     </div>
 </div>
 @endsection
+
