@@ -10,38 +10,42 @@ Este es un boilerplate optimizado y unificado para proyectos **Laravel 12**. Se 
 - **Simplificación de Componentes**: Estructura de componentes Blade optimizada (`x-card`, `x-input`, `x-primary-button`) para un desarrollo más ágil y mantenible.
 - **Base Sólida y Segura**: Configuración lista para **PHP 8.5+**, **PostgreSQL** y **Vite**, respaldada por una extensa batería de pruebas (Feature Tests).
 
-## 🛠️ Instalación y Configuración
+## 🛠️ Instalación y Configuración con Docker
 
-1.  **Clonar el repositorio**:
+Este proyecto está completamente contenedorizado para garantizar que funcione en cualquier equipo sin necesidad de instalar PHP o PostgreSQL localmente.
+
+### Pasos para el Despliegue
+
+1.  **Preparar el entorno**:
+    Copia el archivo de configuración optimizado para Docker:
     ```bash
-    git clone <URL_DEL_REPO>
-    cd boilerplate
+    cp .env.docker .env
     ```
 
-2.  **Instalar dependencias**:
+2.  **Construir y Levantar los Contenedores**:
     ```bash
-    composer install
+    docker-compose up -d --build
+    ```
+
+3.  **Configurar la Aplicación**:
+    ```bash
+    docker-compose exec app composer install
+    docker-compose exec app php artisan key:generate
+    docker-compose exec app php artisan migrate:fresh --seed
+    ```
+
+4.  **Frontend**:
+    ```bash
     npm install
+    npm run build
     ```
 
-3.  **Configurar entorno**:
-    - Copiar el `.env.example` y renombrarlo a `.env`.
-    - Configurar las credenciales de conexión de la base de datos de PostgreSQL dentro de `.env`.
+5.  **Acceder**: [http://localhost:8000](http://localhost:8000)
+    - **Email:** `test@example.com` | **Password:** `password`
 
-4.  **Generar clave y Migrar base de datos**:
-    ```bash
-    php artisan key:generate
-    php artisan migrate --seed
-    ```
+## 🐳 Estructura Docker
+- **App**: PHP 8.4-fpm | **Web**: Nginx | **DB**: PostgreSQL 15 | **Redis**: Caché.
 
-5.  **Iniciar Servidores**:
-    ```bash
-    # En una terminal para compilar el frontend dinámicamente:
-    npm run dev
-    
-    # En otra terminal para el backend:
-    php artisan serve
-    ```
 
 ## 🧪 Ejecución de Pruebas
 

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\RoomController;
-use App\Models\Room;
+use App\Http\Controllers\HabitacionController;
+use App\Http\Controllers\ReservacionController;
+use App\Http\Controllers\PrecioTemporadaController;
+use App\Models\Habitacion;
 use App\Models\Cliente;
 use Illuminate\Support\Facades\Route;
 
@@ -14,17 +16,17 @@ Route::get('/', function () {
 // Dashboard
 Route::get('/dashboard', function () {
     // Sincronización masiva de estados (Alta Eficiencia)
-    Room::syncAllStatuses();
+    Habitacion::syncAllStatuses();
 
-    $totalRooms = Room::count();
-    $availableRooms = Room::where('status', 'disponible')->count();
-    $occupiedRooms = Room::where('status', 'ocupada')->count();
-    $totalClients = Cliente::count();
+    $totalHabitaciones = Habitacion::count();
+    $habitacionesDisponibles = Habitacion::where('estado', 'disponible')->count();
+    $habitacionesOcupadas = Habitacion::where('estado', 'ocupada')->count();
+    $totalClientes = Cliente::count();
     
-    $occupancyRate = $totalRooms > 0 ? ($occupiedRooms / $totalRooms) * 100 : 0;
-    $rooms = Room::with('images')->get();
+    $tasaOcupacion = $totalHabitaciones > 0 ? ($habitacionesOcupadas / $totalHabitaciones) * 100 : 0;
+    $habitaciones = Habitacion::with('imagenes')->get();
 
-    return view('dashboard', compact('totalRooms', 'availableRooms', 'occupiedRooms', 'totalClients', 'occupancyRate', 'rooms'));
+    return view('dashboard', compact('totalHabitaciones', 'habitacionesDisponibles', 'habitacionesOcupadas', 'totalClientes', 'tasaOcupacion', 'habitaciones'));
 })->middleware(['auth', 'can:acceder-dashboard'])->name('dashboard');
 
 // Perfil
@@ -45,11 +47,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', \App\Http\Controllers\ClienteController::class);
 
     // Gestión de habitaciones
-    Route::resource('rooms', RoomController::class);
-    Route::resource('seasonal-prices', \App\Http\Controllers\SeasonalPriceController::class);
+    Route::resource('habitaciones', HabitacionController::class);
+    Route::resource('precios-temporada', PrecioTemporadaController::class);
     
-    Route::get('reservations/list', [\App\Http\Controllers\ReservationController::class, 'reservations'])->name('reservations.reservations');
-    Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
+    Route::get('reservaciones/listado', [ReservacionController::class, 'reservations'])->name('reservaciones.listado');
+    Route::resource('reservaciones', ReservacionController::class);
 });
+
 
 require __DIR__ . '/auth.php';

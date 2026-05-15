@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('room_images', function (Blueprint $table) {
+        Schema::create('precios_temporada', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
-            $table->string('image_path');
+            $table->foreignId('habitacion_id')->constrained('habitaciones')->onDelete('cascade');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->decimal('precio', 10, 2);
+            $table->string('descripcion')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('room_images');
+        Schema::dropIfExists('precios_temporada');
     }
+
 };

@@ -47,6 +47,7 @@ class RoleAndPermissionSeeder extends Seeder
         $roleUser = Role::firstOrCreate(['name' => 'Usuario']);
         $roleUser->syncPermissions(['acceder-dashboard', 'editar-perfil', 'eliminar-cuenta']);
 
+
         // Asignar rol al usuario de prueba si existe
         $user = User::where('email', 'test@example.com')->first();
         if ($user) {

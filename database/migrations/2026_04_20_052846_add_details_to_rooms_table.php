@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->text('description')->nullable()->after('price');
-            $table->string('image_path')->nullable()->after('description');
+        Schema::table('habitaciones', function (Blueprint $table) {
+            $table->text('descripcion')->nullable()->after('precio');
+            $table->string('ruta_imagen')->nullable()->after('descripcion');
         });
     }
 
@@ -22,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->dropColumn(['description', 'image_path']);
+        Schema::table('habitaciones', function (Blueprint $table) {
+            $table->dropColumn(['descripcion', 'ruta_imagen']);
         });
     }
+
 };

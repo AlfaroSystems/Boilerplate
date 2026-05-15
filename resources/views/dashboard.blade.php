@@ -36,7 +36,7 @@
                     <span class="text-xs font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-full">Hotel</span>
                 </div>
                 <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Habitaciones</h3>
-                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $totalRooms }}</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $totalHabitaciones }}</p>
             </div>
 
             <!-- Disponibles -->
@@ -50,7 +50,7 @@
                     <span class="text-xs font-bold text-green-500 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full">Libres</span>
                 </div>
                 <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Disponibles</h3>
-                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $availableRooms }}</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $habitacionesDisponibles }}</p>
             </div>
 
             <!-- Ocupadas -->
@@ -64,7 +64,7 @@
                     <span class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-full">Check-in</span>
                 </div>
                 <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Ocupadas</h3>
-                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $occupiedRooms }}</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $habitacionesOcupadas }}</p>
             </div>
 
             <!-- Total Clientes -->
@@ -78,7 +78,7 @@
                     <span class="text-xs font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded-full">Base</span>
                 </div>
                 <h3 class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Clientes</h3>
-                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $totalClients }}</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-1">{{ $totalClientes }}</p>
             </div>
 
         </div>
@@ -90,9 +90,9 @@
                     <h2 class="text-xl font-bold mb-2">Resumen de Ocupación</h2>
                     <p class="text-indigo-100 mb-4 text-sm">Estado actual de la capacidad del hotel.</p>
                     <div class="w-full bg-white/20 rounded-full h-4 mb-2">
-                        <div class="bg-white h-4 rounded-full" style="width: <?php echo $occupancyRate; ?>%"></div>
+                        <div class="bg-white h-4 rounded-full" @style(['width' => $tasaOcupacion . '%'])></div>
                     </div>
-                    <p class="text-xs text-white/80">{{ $occupiedRooms }} de {{ $totalRooms }} habitaciones ocupadas</p>
+                    <p class="text-xs text-white/80">{{ $habitacionesOcupadas }} de {{ $totalHabitaciones }} habitaciones ocupadas</p>
                 </div>
                 <svg class="absolute right-[-20px] bottom-[-20px] text-white/10 w-48 h-48" fill="currentColor" viewBox="0 0 24 24">
                      <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -102,7 +102,7 @@
             <div class="bg-white dark:bg-[#161615] rounded-2xl p-6 border border-gray-100 dark:border-[#2a2a2a] shadow-sm">
                 <h2 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Acciones Rápidas</h2>
                 <div class="grid grid-cols-2 gap-3">
-                    <a href="{{ route('rooms.create') }}" class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-[#1C1C1B] rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-gray-300 transition-colors text-sm font-medium">
+                    <a href="{{ route('habitaciones.create') }}" class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-[#1C1C1B] rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-gray-300 transition-colors text-sm font-medium">
                         <span class="text-indigo-500 text-lg">+</span> Nueva Habitación
                     </a>
                     <a href="{{ route('clientes.create') }}" class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-[#1C1C1B] rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-gray-300 transition-colors text-sm font-medium">
@@ -111,5 +111,6 @@
                 </div>
             </div>
         </div>
+
     </div>
 </x-app-layout>

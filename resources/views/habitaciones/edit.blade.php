@@ -5,7 +5,7 @@
 <div class="max-w-2xl mx-auto">
 
     <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
-        Editar Habitación: {{ $room->room_number }}
+        Editar Habitación: {{ $habitacion->numero_habitacion }}
     </h1>
 
     <!-- ERRORES -->
@@ -22,7 +22,7 @@
     <!-- CARD -->
     <div class="bg-white dark:bg-[#161615] p-6 rounded-xl shadow">
 
-        <form action="{{ route('rooms.update', $room) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <form action="{{ route('habitaciones.update', $habitacion) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
 
@@ -30,7 +30,7 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Número de habitación
                 </label>
-                <input type="text" name="room_number" value="{{ old('room_number', $room->room_number) }}"
+                <input type="text" name="numero_habitacion" value="{{ old('numero_habitacion', $habitacion->numero_habitacion) }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
@@ -39,11 +39,11 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Tipo
                 </label>
-                <select name="type"
+                <select name="tipo"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-                    <option value="individual" {{ old('type', $room->type) == 'individual' ? 'selected' : '' }}>Individual</option>
-                    <option value="familiar" {{ old('type', $room->type) == 'familiar' ? 'selected' : '' }}>Familiar</option>
-                    <option value="suite" {{ old('type', $room->type) == 'suite' ? 'selected' : '' }}>Suite</option>
+                    <option value="individual" {{ old('tipo', $habitacion->tipo) == 'individual' ? 'selected' : '' }}>Individual</option>
+                    <option value="familiar" {{ old('tipo', $habitacion->tipo) == 'familiar' ? 'selected' : '' }}>Familiar</option>
+                    <option value="suite" {{ old('tipo', $habitacion->tipo) == 'suite' ? 'selected' : '' }}>Suite</option>
                 </select>
             </div>
 
@@ -52,7 +52,7 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Precio por noche
                 </label>
-                <input type="number" step="0.01" name="price" value="{{ old('price', $room->price) }}"
+                <input type="number" step="0.01" name="precio" value="{{ old('precio', $habitacion->precio) }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
@@ -61,8 +61,8 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     ¿Qué contiene la habitación? (Camas, baño, etc.)
                 </label>
-                <textarea name="description" rows="3"
-                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('description', $room->description) }}</textarea>
+                <textarea name="descripcion" rows="3"
+                    class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">{{ old('descripcion', $habitacion->descripcion) }}</textarea>
             </div>
 
             <!-- Fotografías -->
@@ -73,23 +73,23 @@
                 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                     <!-- Imagen Principal -->
-                    @if($room->image_path)
+                    @if($habitacion->ruta_imagen)
                         <div class="relative group">
-                            <img src="{{ asset('storage/' . $room->image_path) }}" alt="Principal" class="w-full h-24 object-cover rounded-lg shadow-sm border-2 border-indigo-500">
+                            <img src="{{ asset('storage/' . $habitacion->ruta_imagen) }}" alt="Principal" class="w-full h-24 object-cover rounded-lg shadow-sm border-2 border-indigo-500">
                             <span class="absolute top-1 left-1 bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded uppercase font-bold">Principal</span>
                         </div>
                     @endif
 
                     <!-- Imágenes Adicionales -->
-                    @foreach($room->images as $img)
+                    @foreach($habitacion->imagenes as $img)
                         <div class="relative group">
-                            <img src="{{ asset('storage/' . $img->image_path) }}" alt="Adicional" class="w-full h-24 object-cover rounded-lg shadow-sm">
+                            <img src="{{ asset('storage/' . $img->ruta_imagen) }}" alt="Adicional" class="w-full h-24 object-cover rounded-lg shadow-sm">
                         </div>
                     @endforeach
                 </div>
 
                 <p class="text-xs text-gray-500 mb-2 italic">Subir más fotografías (se añadirán a la galería):</p>
-                <input type="file" name="images[]" accept="image/*" multiple
+                <input type="file" name="imagenes[]" accept="image/*" multiple
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
@@ -98,11 +98,11 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Estado
                 </label>
-                <select name="status"
+                <select name="estado"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-                    <option value="disponible" {{ old('status', $room->status) == 'disponible' ? 'selected' : '' }}>Disponible</option>
-                    <option value="ocupada" {{ old('status', $room->status) == 'ocupada' ? 'selected' : '' }}>Ocupada</option>
-                    <option value="mantenimiento" {{ old('status', $room->status) == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
+                    <option value="disponible" {{ old('estado', $habitacion->estado) == 'disponible' ? 'selected' : '' }}>Disponible</option>
+                    <option value="ocupada" {{ old('estado', $habitacion->estado) == 'ocupada' ? 'selected' : '' }}>Ocupada</option>
+                    <option value="mantenimiento" {{ old('estado', $habitacion->estado) == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
                 </select>
             </div>
 
@@ -111,13 +111,13 @@
                 <label class="block font-semibold text-gray-700 dark:text-gray-300">
                     Disponible desde
                 </label>
-                <input type="date" name="available_from" value="{{ old('available_from', $room->available_from ? \Carbon\Carbon::parse($room->available_from)->format('Y-m-d') : '') }}"
+                <input type="date" name="disponible_desde" value="{{ old('disponible_desde', $habitacion->disponible_desde ? \Carbon\Carbon::parse($habitacion->disponible_desde)->format('Y-m-d') : '') }}"
                     class="w-full p-2 border rounded bg-white dark:bg-[#1C1C1B] dark:border-[#3E3E3A] dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
             </div>
 
             <!-- BOTONES -->
             <div class="flex justify-between mt-6">
-                <a href="{{ route('rooms.index') }}"
+                <a href="{{ route('habitaciones.index') }}"
                     class="px-4 py-2 bg-gray-300 dark:bg-[#2a2a2a] dark:text-white rounded hover:bg-gray-400 dark:hover:bg-[#3a3a3a] transition">
                     Volver
                 </a>
@@ -135,5 +135,6 @@
         </form>
     </div>
 </div>
+
 
 @endsection

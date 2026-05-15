@@ -73,32 +73,33 @@
                 @endcan
 
                 <!-- Habitaciones -->
-                @can('gestionar-rooms')
-                    <a href="{{ route('rooms.index') }}"
-                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('rooms.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                @can('gestionar-habitaciones')
+                    <a href="{{ route('habitaciones.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('habitaciones.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Gestión de Habitaciones
                     </a>
                 @endcan
 
-                @can('gestionar-seasonal_prices')
-                    <a href="{{ route('seasonal-prices.index') }}"
-                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('seasonal-prices.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                @can('gestionar-precios_temporada')
+                    <a href="{{ route('precios-temporada.index') }}"
+                        class="block px-4 py-2 rounded-lg {{ request()->routeIs('precios-temporada.*') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                         Precios por Temporada
                     </a>
                 @endcan
 
-                @can('gestionar-reservations')
+                @can('gestionar-reservaciones')
                     <div class="space-y-1">
-                        <a href="{{ route('reservations.index') }}"
-                            class="block px-4 py-2 rounded-lg {{ request()->routeIs('reservations.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        <a href="{{ route('reservaciones.index') }}"
+                            class="block px-4 py-2 rounded-lg {{ request()->routeIs('reservaciones.index') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                             Habitaciones Disponibles
                         </a>
-                        <a href="{{ route('reservations.reservations') }}"
-                            class="block px-4 py-2 rounded-lg {{ request()->routeIs('reservations.reservations') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
+                        <a href="{{ route('reservaciones.listado') }}"
+                            class="block px-4 py-2 rounded-lg {{ request()->routeIs('reservaciones.listado') ? 'bg-[#dbdbd7] dark:bg-[#3E3E3A] dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-[#3E3E3A] dark:text-[#EDEDEC]' }}">
                             Listado de Reservas
                         </a>
                     </div>
                 @endcan
+
 
             </nav>
         </aside>
